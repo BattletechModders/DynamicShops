@@ -50,7 +50,53 @@
 			]
 		}
 	
-		
+		"Factions" : [
+			{
+				"Faction" : "AuriganRestoration",
+				"TaggedShops" : {
+					"ItemCollections" : [
+						{
+							"Tag" : "planet_faction_restoration",
+							"ItemCollections" : [
+								"itemCollection_minor_AuriganRestoration"
+							]							
+						}
+					]
+				}
+				"RepShops" : [		
+				]
+			},
+			{
+				"Faction" : "TaurianConcordat",
+				"TaggedShops" : {
+					"ItemCollections" : [
+						{
+							"Tag" : "planet_faction_taurian",
+							"ItemCollections" : [
+								"itemCollection_major_TaurianConcordat"
+							]							
+						}
+					]
+				}
+				"RepShops" : [		
+				]
+			},
+			{
+				"Faction" : "Liao",
+				"TaggedShops" : {
+					"ItemCollections" : [
+						{
+							"Tag" : "planet_faction_liao",
+							"ItemCollections" : [
+								"itemCollection_major_Liao"
+							]							
+						}
+					]
+				}
+				"RepShops" : [		
+				]
+			}
+		]
 	},	
 		
 	"Manifest": [ 
