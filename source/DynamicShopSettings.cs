@@ -20,16 +20,17 @@ namespace DynamicShops
     public class RepCollection
     {
         public SimGameReputation Reputation;
-        public TaggedCollections ItemCollections;
+        public CollectionDefs Items;
     }
 
     [Serializable]
-    public class TaggedCollections
+    public class CollectionDefs
     {
-        public TaggedCollection[] ItemCollections;
+        public TaggedCollection[] Tagged;
+        public string[] Untagged;
+
         [JsonIgnore]
         Dictionary<string, string[]> CollectionsDictionary;
-
         [JsonIgnore]
         public string[] this[string tag]
         {
@@ -44,14 +45,15 @@ namespace DynamicShops
                 return null;
             }
         }
+        
 
         public void Complete()
         {
             CollectionsDictionary = new Dictionary<string, string[]>();
-            if (ItemCollections == null || ItemCollections.Length == 0)
+            if (Tagged == null || Tagged.Length == 0)
                 return;
 
-            foreach (var collection in ItemCollections)
+            foreach (var collection in Tagged)
             {
                 try
                 {
@@ -64,6 +66,10 @@ namespace DynamicShops
 
         public IEnumerable<string> GetItemCollections(StarSystem starSystem)
         {
+            if (Untagged != null && Untagged.Length > 0)
+                for (int i = 0; i < Untagged.Length; i++)
+                    yield return Untagged[i];
+
             foreach (var tag in starSystem.Def.Tags)
             {
                 var items = this[tag];
@@ -79,28 +85,29 @@ namespace DynamicShops
     {
         public Faction Faction;
 
-        public TaggedCollections TaggedShops;
+        public CollectionDefs SystemShops;
         public RepCollection[] RepShops;
-        public TaggedCollections FactionShops;
+        public CollectionDefs FactionShops;
 
         public void Complete()
         {
-            if (TaggedShops == null)
-                TaggedShops = new TaggedCollections();
-            TaggedShops.Complete();
+            if (SystemShops == null)
+                SystemShops = new CollectionDefs();
+            SystemShops.Complete();
 
             if (RepShops == null)
                 RepShops = new RepCollection[0];
             RepShops = RepShops.OrderBy(i => i.Reputation).ToArray();
+
             foreach (var rep in RepShops)
             {
-                if (rep.ItemCollections == null)
-                    rep.ItemCollections = new TaggedCollections();
-                rep.ItemCollections.Complete();
+                if (rep.Items == null)
+                    rep.Items = new CollectionDefs();
+                rep.Items.Complete();
             }
 
             if (FactionShops == null)
-                FactionShops = new TaggedCollections();
+                FactionShops = new CollectionDefs();
             FactionShops.Complete();
         }
     }
@@ -111,12 +118,13 @@ namespace DynamicShops
 
         public bool ClearDefaultSystemShop = true;
         public bool FactionShopOnEveryPlanet = true;
+        public bool OverrideFactionShopOwner = true;
 
         public string EmptyShopSystemTag = "planet_other_empty";
         public string BlackMarketSystemTag = "planet_other_blackmarket";
 
         public FactionInfo[] Factions;
-        public TaggedCollections TaggedShops;
+        public CollectionDefs SystemShops;
 
         [JsonIgnore]
         public Dictionary<Faction, FactionInfo> FactionInfos;
@@ -125,9 +133,9 @@ namespace DynamicShops
 
         public void Complete()
         {
-            if (TaggedShops == null)
-                TaggedShops = new TaggedCollections();
-            TaggedShops.Complete();
+            if (SystemShops == null)
+                SystemShops = new CollectionDefs();
+            SystemShops.Complete();
 
             if (Factions == null)
                 Factions = new FactionInfo[0];

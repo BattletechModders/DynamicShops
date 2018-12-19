@@ -14,6 +14,11 @@ namespace DinamicShops.Patches
         {
             if (__instance.Def.Tags.Contains(Control.Settings.EmptyShopSystemTag))
                 return;
+#if CCDEBUG
+#warning REMOVE THIS FOR RELEASE!
+            __instance.Sim.AddReputation(Faction.AuriganRestoration, 1000, false);
+            __instance.Sim.AddReputation(Faction.TaurianConcordat, 50, false);
+#endif
 
             DoSystemShop(__instance, __instance.SystemShop);
         }
@@ -35,21 +40,21 @@ namespace DinamicShops.Patches
                         AddItemCollection(systemShop, item);
 
             // add items from tags
-            foreach (var item in Control.Settings.TaggedShops.GetItemCollections(starSystem))
+            foreach (var item in Control.Settings.SystemShops.GetItemCollections(starSystem))
                 AddItemCollection(systemShop, item);
 
             // Add faction items
             var faction = starSystem.Owner;
             if(Control.Settings.FactionInfos.TryGetValue(faction, out var Info))
             {
-                foreach(var item in Info.TaggedShops.GetItemCollections(starSystem))
+                foreach(var item in Info.SystemShops.GetItemCollections(starSystem))
                     AddItemCollection(systemShop, item);
 
                 var reputation = starSystem.Sim.GetReputation(faction);
 
                 foreach(var repitem in Info.RepShops)
                     if(repitem.Reputation <= reputation)
-                        foreach(var item in repitem.ItemCollections.GetItemCollections(starSystem))
+                        foreach(var item in repitem.Items.GetItemCollections(starSystem))
                             AddItemCollection(systemShop, item);
             }
 #if CCDEBUG

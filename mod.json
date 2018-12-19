@@ -15,8 +15,8 @@
 		"EmptyShopSystemTag" : "planet_other_empty",
 		"BlackMarketSystemTag" : "planet_other_blackmarket",
 		
-		"TaggedShops" : {
-			"ItemCollections" : [		
+		"SystemShops" : {
+			"Tagged" : [		
 				{
 					"Tag" : "planet_civ_primitive",
 					"ItemCollections" : [
@@ -48,52 +48,109 @@
 					]
 				}
 			]
-		}
+		},
 	
 		"Factions" : [
 			{
 				"Faction" : "AuriganRestoration",
-				"TaggedShops" : {
-					"ItemCollections" : [
-						{
-							"Tag" : "planet_faction_restoration",
-							"ItemCollections" : [
-								"itemCollection_minor_AuriganRestoration"
-							]							
-						}
+				"SystemShops" : {
+					"Untagged" : [
+						"itemCollection_minor_AuriganRestoration"
 					]
-				}
-				"RepShops" : [		
+				},
+				"RepShops" : [	
+					{
+						"Reputation" : "LIKED",
+						"Items" :	{
+							"Untagged" : [
+								"IC_INVALID_AR_LIKED"
+							]
+						}
+					},
+										{
+						"Reputation" : "FRIENDLY",
+						"Items" :	{
+							"Untagged" : [
+								"IC_INVALID_AR_FRIENDLY"
+							]
+						}
+					},
+										{
+						"Reputation" : "HONORED",
+						"Items" :	{
+							"Untagged" : [
+								"IC_INVALID_AR_HONORED"
+							]
+						}
+					}
 				]
 			},
 			{
 				"Faction" : "TaurianConcordat",
-				"TaggedShops" : {
-					"ItemCollections" : [
-						{
-							"Tag" : "planet_faction_taurian",
-							"ItemCollections" : [
-								"itemCollection_major_TaurianConcordat"
-							]							
-						}
+				"SystemShops" : {
+					"Untagged" : [
+						"itemCollection_major_TaurianConcordat"
 					]
-				}
-				"RepShops" : [		
+				},
+				"RepShops" : [	
+					{
+						"Reputation" : "LIKED",
+						"Items" :	{
+							"Untagged" : [
+								"IC_INVALID_TC_LIKED"
+							]
+						}
+					},
+										{
+						"Reputation" : "FRIENDLY",
+						"Items" :	{
+							"Untagged" : [
+								"IC_INVALID_TC_FRIENDLY"
+							]
+						}
+					},
+										{
+						"Reputation" : "HONORED",
+						"Items" :	{
+							"Untagged" : [
+								"IC_INVALID_TC_HONORED"
+							]
+						}
+					}
 				]
 			},
 			{
 				"Faction" : "Liao",
-				"TaggedShops" : {
-					"ItemCollections" : [
-						{
-							"Tag" : "planet_faction_liao",
-							"ItemCollections" : [
-								"itemCollection_major_Liao"
-							]							
-						}
+				"SystemShops" : {
+					"Untagged" : [
+						"itemCollection_major_Liao"
 					]
-				}
-				"RepShops" : [		
+				},
+				"RepShops" : [	
+					{
+						"Reputation" : "LIKED",
+						"Items" :	{
+							"Untagged" : [
+								"IC_INVALID_HL_LIKED"
+							]
+						}
+					},
+										{
+						"Reputation" : "FRIENDLY",
+						"Items" :	{
+							"Untagged" : [
+								"IC_INVALID_HL_FRIENDLY"
+							]
+						}
+					},
+										{
+						"Reputation" : "HONORED",
+						"Items" :	{
+							"Untagged" : [
+								"IC_INVALID_HL_HONORED"
+							]
+						}
+					}
 				]
 			}
 		]
