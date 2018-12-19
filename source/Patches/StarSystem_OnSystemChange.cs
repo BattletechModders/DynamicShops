@@ -4,7 +4,7 @@ using BattleTech;
 using DynamicShops;
 using Harmony;
 
-namespace DinamicShops.Patches
+namespace DynamicShops.Patches
 {
     [HarmonyPatch(typeof(StarSystem), "OnSystemChange")]
     public static class StarSystem_OnSystemChange
@@ -30,6 +30,34 @@ namespace DinamicShops.Patches
 #endif
 
             DoSystemShop(__instance, __instance.SystemShop);
+            DoFactionShop(__instance, __instance.FactionShop);
+        }
+
+        private static void DoFactionShop(StarSystem starSystem, Shop factionShop)
+        {
+#if CCDEBUG
+            Control.Logger.LogDebug($"FactionShop for {starSystem.Name} ({starSystem.Def.Description.Id})");
+            ShowItemCollections("Before", factionShop.ItemCollections);
+#endif
+
+            factionShop.ItemCollections.Clear();
+            // add items from system def
+            if (!Control.Settings.ClearDefaultFactionShop)
+                if (starSystem.Def.FactionShopItems != null && starSystem.Def.FactionShopItems.Count > 0)
+                    foreach (var item in starSystem.Def.FactionShopItems)
+                        AddItemCollection(factionShop, item);
+
+            var faction = starSystem.Def.FactionShopOwner;
+            if (Control.Settings.FactionInfos.TryGetValue(faction, out var Info))
+            {
+                foreach(var item in Info.FactionShops.GetItemCollections(starSystem))
+                    AddItemCollection(factionShop, item);
+            }
+
+#if CCDEBUG
+            ShowItemCollections("After", factionShop.ItemCollections);
+            Control.Logger.LogDebug("======================================================");
+#endif
         }
 
         private static void DoSystemShop(StarSystem starSystem, Shop systemShop)
@@ -41,7 +69,7 @@ namespace DinamicShops.Patches
 
 
             systemShop.ItemCollections.Clear();
-        
+
             // add items from system def
             if (!Control.Settings.ClearDefaultSystemShop)
                 if (starSystem.Def.SystemShopItems != null && starSystem.Def.SystemShopItems.Count > 0)
@@ -54,16 +82,16 @@ namespace DinamicShops.Patches
 
             // Add faction items
             var faction = starSystem.Owner;
-            if(Control.Settings.FactionInfos.TryGetValue(faction, out var Info))
+            if (Control.Settings.FactionInfos.TryGetValue(faction, out var Info))
             {
-                foreach(var item in Info.SystemShops.GetItemCollections(starSystem))
+                foreach (var item in Info.SystemShops.GetItemCollections(starSystem))
                     AddItemCollection(systemShop, item);
 
                 var reputation = starSystem.Sim.GetReputation(faction);
 
-                foreach(var repitem in Info.RepShops)
-                    if(repitem.Reputation <= reputation)
-                        foreach(var item in repitem.Items.GetItemCollections(starSystem))
+                foreach (var repitem in Info.RepShops)
+                    if (repitem.Reputation <= reputation)
+                        foreach (var item in repitem.Items.GetItemCollections(starSystem))
                             AddItemCollection(systemShop, item);
             }
 #if CCDEBUG

@@ -117,6 +117,7 @@ namespace DynamicShops
         public LogLevel LogLevel = LogLevel.Debug;
 
         public bool ClearDefaultSystemShop = true;
+        public bool ClearDefaultFactionShop = true;
         public bool FactionShopOnEveryPlanet = true;
         public bool OverrideFactionShopOwner = true;
 

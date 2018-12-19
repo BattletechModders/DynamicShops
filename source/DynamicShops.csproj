@@ -7,7 +7,7 @@
     <ProjectGuid>{7E755F55-106A-4F0D-A970-0BA7FC6C5662}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CustomComponents</RootNamespace>
+    <RootNamespace>DynamicShops</RootNamespace>
     <AssemblyName>DynamicShops</AssemblyName>
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Control.cs" />
     <Compile Include="DynamicShopSettings.cs" />
+    <Compile Include="Patches\StarSystemDef_FactionShopOwner.cs" />
     <Compile Include="Patches\StarSystem_OnSystemChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
