@@ -9,6 +9,9 @@ namespace DinamicShops.Patches
     [HarmonyPatch(typeof(StarSystem), "OnSystemChange")]
     public static class StarSystem_OnSystemChange
     {
+#if CCDEBUG
+        public static bool rep_changed = false;
+#endif
         [HarmonyPrefix]
         public static void ReplaceShops(StarSystem __instance)
         {
@@ -16,8 +19,14 @@ namespace DinamicShops.Patches
                 return;
 #if CCDEBUG
 #warning REMOVE THIS FOR RELEASE!
-            __instance.Sim.AddReputation(Faction.AuriganRestoration, 1000, false);
-            __instance.Sim.AddReputation(Faction.TaurianConcordat, 50, false);
+            if (!rep_changed)
+            {
+                rep_changed = true;
+                Control.Logger.LogDebug("REPUTATION CHANGED!!! REMOVE THIS!!");
+
+                __instance.Sim.AddReputation(Faction.Liao, 100, false);
+                __instance.Sim.AddReputation(Faction.TaurianConcordat, 50, false);
+            }
 #endif
 
             DoSystemShop(__instance, __instance.SystemShop);
@@ -70,16 +79,14 @@ namespace DinamicShops.Patches
                 var collection = UnityGameInstance.BattleTechGame.DataManager.ItemCollectionDefs.Get(item);
                 if (collection == null)
                 {
-                    Control.Logger.LogError("Cannot Load ItemCollection " + item);
+                    Control.Logger.LogError("---- No ItemCollection " + item);
                 }
                 else
                     systemShop.ItemCollections.Add(collection);
             }
-            catch (Exception e)
+            catch
             {
-                Control.Logger.LogError("Cannot Load ItemCollection " + item);
-                Control.Logger.LogError(e);
-                throw;
+                Control.Logger.LogError("---- Cannot Load ItemCollection " + item);
             }
         }
 

@@ -89,7 +89,7 @@
 				"Faction" : "TaurianConcordat",
 				"SystemShops" : {
 					"Untagged" : [
-						"itemCollection_major_TaurianConcordat"
+						"itemCollection_minor_TaurianConcordat"
 					]
 				},
 				"RepShops" : [	
