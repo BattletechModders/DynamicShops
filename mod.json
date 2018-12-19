@@ -9,40 +9,48 @@
 	"DLLEntryPoint": "DynamicShops.Control.Init",
 	"Settings" : {
 		"LogLevel": "Debug",
-		"ClearDefaultShop" : false,
+		"ClearDefaultSystemShop" : true,
+		"FactionShopOnEveryPlanet" : true,
 		
-		"TaggedCollections" : [
-			{
-				"Tag" : "planet_civ_primitive",
-				"ItemCollections" : [
-					"ItemCollection_SS_Primitive"
-				]
-			},
-			{
-				"Tag" : "planet_civ_periphery",
-				"ItemCollections" : [
-					"ItemCollection_SS_Perephiry"			
-				]
-			},
-			{
-				"Tag" : "planet_civ_innersphere",
-				"ItemCollections" : [
-					"ItemCollection_SS_IS"			
-				]
-			},
-			{
-				"Tag" : "planet_industry_research",
-				"ItemCollections" : [
-					"ItemCollection_SS_Research"
-				]
-			},
-			{
-				"Tag" : "planet_industry_manufacturing",
-				"ItemCollections" : [
-					"ItemCollection_SS_Manufacture"
-				]
-			}
-		]
+		"EmptyShopSystemTag" : "planet_other_empty",
+		"BlackMarketSystemTag" : "planet_other_blackmarket",
+		
+		"TaggedShops" : {
+			"ItemCollections" : [		
+				{
+					"Tag" : "planet_civ_primitive",
+					"ItemCollections" : [
+						"ItemCollection_SS_Primitive"
+					]
+				},
+				{
+					"Tag" : "planet_civ_periphery",
+					"ItemCollections" : [
+						"ItemCollection_SS_Perephiry"			
+					]
+				},
+				{
+					"Tag" : "planet_civ_innersphere",
+					"ItemCollections" : [
+						"ItemCollection_SS_IS"			
+					]
+				},
+				{
+					"Tag" : "planet_industry_research",
+					"ItemCollections" : [
+						"ItemCollection_SS_Research"
+					]
+				},
+				{
+					"Tag" : "planet_industry_manufacturing",
+					"ItemCollections" : [
+						"ItemCollection_SS_Manufacture"
+					]
+				}
+			]
+		}
+	
+		
 	},	
 		
 	"Manifest": [ 

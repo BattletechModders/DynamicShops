@@ -12,47 +12,53 @@ namespace DinamicShops.Patches
         [HarmonyPrefix]
         public static void ReplaceShops(StarSystem __instance)
         {
+            if (__instance.Def.Tags.Contains(Control.Settings.EmptyShopSystemTag))
+                return;
+
             DoSystemShop(__instance, __instance.SystemShop);
         }
 
         private static void DoSystemShop(StarSystem starSystem, Shop systemShop)
         {
-
-
 #if CCDEBUG
             Control.Logger.LogDebug($"SystemShop for {starSystem.Name} ({starSystem.Def.Description.Id})");
             ShowItemCollections("Before", systemShop.ItemCollections);
 #endif
 
-            //            if (systemShop.IsEmpty)
-            //            {
-            //#if CCDEBUG
-            //                Control.Logger.LogDebug("---- Empty");
-            //                Control.Logger.LogDebug("======================================================");
-            //#endif
-            //                return;
-            //            }
 
             systemShop.ItemCollections.Clear();
-            if (Control.Settings.ClearDefaultShop)
-                if(starSystem.Def.SystemShopItems != null && starSystem.Def.SystemShopItems.Count > 0)
+        
+            // add items from system def
+            if (!Control.Settings.ClearDefaultSystemShop)
+                if (starSystem.Def.SystemShopItems != null && starSystem.Def.SystemShopItems.Count > 0)
                     foreach (var item in starSystem.Def.SystemShopItems)
-                        GetItemCollection(systemShop, item);
+                        AddItemCollection(systemShop, item);
 
-            foreach (var defTag in starSystem.Def.Tags)
+            // add items from tags
+            foreach (var item in Control.Settings.TaggedShops.GetItemCollections(starSystem))
+                AddItemCollection(systemShop, item);
+
+            // Add faction items
+            var faction = starSystem.Owner;
+            if(Control.Settings.FactionInfos.TryGetValue(faction, out var Info))
             {
-                if (Control.Settings.TagInfos.TryGetValue(defTag, out var items))
-                    foreach (var item in items)
-                        GetItemCollection(systemShop, item);
-            }
+                foreach(var item in Info.TaggedShops.GetItemCollections(starSystem))
+                    AddItemCollection(systemShop, item);
 
+                var reputation = starSystem.Sim.GetReputation(faction);
+
+                foreach(var repitem in Info.RepShops)
+                    if(repitem.Reputation <= reputation)
+                        foreach(var item in repitem.ItemCollections.GetItemCollections(starSystem))
+                            AddItemCollection(systemShop, item);
+            }
 #if CCDEBUG
             ShowItemCollections("After", systemShop.ItemCollections);
             Control.Logger.LogDebug("======================================================");
 #endif
         }
 
-        private static void GetItemCollection(Shop systemShop, string item)
+        private static void AddItemCollection(Shop systemShop, string item)
         {
             try
             {
