@@ -1,0 +1,54 @@
+{
+	"Name": "DynamicShops",
+	"Author": "Denadan",
+	"Website": "https://github.com/Denadan/DynamicShops",
+
+	"Enabled": true,
+	"DependsOn": [],
+	"DLL": "DynamicShops.dll",
+	"DLLEntryPoint": "DynamicShops.Control.Init",
+	"Settings" : {
+		"LogLevel": "Debug",
+		"ClearDefaultShop" : false,
+		
+		"TaggedCollections" : [
+			{
+				"Tag" : "planet_civ_primitive",
+				"ItemCollections" : [
+					"ItemCollection_SS_Primitive"
+				]
+			},
+			{
+				"Tag" : "planet_civ_periphery",
+				"ItemCollections" : [
+					"ItemCollection_SS_Perephiry"			
+				]
+			},
+			{
+				"Tag" : "planet_civ_innersphere",
+				"ItemCollections" : [
+					"ItemCollection_SS_IS"			
+				]
+			},
+			{
+				"Tag" : "planet_industry_research",
+				"ItemCollections" : [
+					"ItemCollection_SS_Research"
+				]
+			},
+			{
+				"Tag" : "planet_industry_manufacturing",
+				"ItemCollections" : [
+					"ItemCollection_SS_Manufacture"
+				]
+			}
+		]
+	},	
+		
+	"Manifest": [ 
+		{
+			"Type": "ItemCollectionDef",
+			"Path": "data" 			
+		}
+	]
+}
