@@ -34,12 +34,34 @@ namespace DynamicShops.Patches
 
                 DoSystemShop(__instance, __instance.SystemShop);
                 DoFactionShop(__instance, __instance.FactionShop);
+                DoBlackMarket(__instance, __instance.BlackMarketShop);
             }
             catch (Exception e)
             {
                 Control.Logger.LogError(e);
             }
 
+        }
+
+        private static void DoBlackMarket(StarSystem starSystem, Shop blackMarketShop)
+        {
+#if CCDEBUG
+            Control.Logger.LogDebug($"BlackMarket for {starSystem.Name} ({starSystem.Def.Description.Id}), HasBlackMarket: {starSystem.Def.Tags.Contains(Control.Settings.BlackMarketSystemTag)}");
+            ShowItemCollections("Before", blackMarketShop.ItemCollections);
+#endif
+
+            blackMarketShop.ItemCollections.Clear();
+            // add items from system def
+            if (!Control.Settings.ClearDefaultFactionShop)
+                if (starSystem.Def.BlackMarketShopItems != null && starSystem.Def.BlackMarketShopItems.Count > 0)
+                    foreach (var item in starSystem.Def.BlackMarketShopItems)
+                        AddItemCollection(blackMarketShop, item);
+
+
+#if CCDEBUG
+            ShowItemCollections("After", blackMarketShop.ItemCollections);
+            Control.Logger.LogDebug("======================================================");
+#endif
         }
 
         private static void DoFactionShop(StarSystem starSystem, Shop factionShop)

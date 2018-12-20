@@ -118,19 +118,25 @@ namespace DynamicShops
 
         public bool ClearDefaultSystemShop = true;
         public bool ClearDefaultFactionShop = true;
+        public bool ClearDefaultPirateShop = true;
         public bool FactionShopOnEveryPlanet = true;
         public bool OverrideFactionShopOwner = true;
+        public bool DEBUG_AllowBlackMarket = false;
 
         public string EmptyShopSystemTag = "planet_other_empty";
         public string BlackMarketSystemTag = "planet_other_blackmarket";
+        public float BlacMarketPrice = 1.5f;
+        public int BlackMarketItemsFromFactionStore = 3;
 
         public FactionInfo[] Factions;
         public CollectionDefs SystemShops;
+        public CollectionDefs BlackMarket;
 
         [JsonIgnore]
         public Dictionary<Faction, FactionInfo> FactionInfos;
         [JsonIgnore]
         public Dictionary<string, string[]> TagInfos;
+       
 
         public void Complete()
         {
@@ -154,6 +160,11 @@ namespace DynamicShops
 
                 }
             }
+
+            if(BlackMarket == null)
+                BlackMarket = new CollectionDefs();
+            BlackMarket.Complete();
+
         }
     }
 }

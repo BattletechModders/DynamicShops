@@ -11,12 +11,15 @@
 		"LogLevel": "Debug",
 		"ClearDefaultSystemShop" : true,
 		"ClearDefaultFactionShop" :  true,
+		"ClearDefaultPirateShop" : true,
 
+		"DEBUG_AllowBlackMarket" :  true,
 		"OverrideFactionShopOwner" :  true,
 		"FactionShopOnEveryPlanet" : true,
 		
 		"EmptyShopSystemTag" : "planet_other_empty",
 		"BlackMarketSystemTag" : "planet_other_blackmarket",
+		"BlacMarketPrice" :  1.5,
 		
 		"SystemShops" : {
 			"Tagged" : [		

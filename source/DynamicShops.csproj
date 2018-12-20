@@ -78,6 +78,7 @@
     <Compile Include="DynamicShopSettings.cs" />
     <Compile Include="Patches\Shop_Initialize.cs" />
     <Compile Include="Patches\StarSystemDef_FactionShopOwner.cs" />
+    <Compile Include="Patches\StarSystem_CanUseBlackMarketStore.cs" />
     <Compile Include="Patches\StarSystem_HasFactionStore.cs" />
     <Compile Include="Patches\StarSystem_OnSystemChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
