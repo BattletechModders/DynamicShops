@@ -1,4 +1,4 @@
-﻿#undef CCDEBUG
+﻿//#undef CCDEBUG
 
 using Harmony;
 using System;

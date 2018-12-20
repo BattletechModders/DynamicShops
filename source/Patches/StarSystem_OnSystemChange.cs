@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using BattleTech;
 using DynamicShops;
@@ -15,28 +16,36 @@ namespace DynamicShops.Patches
         [HarmonyPrefix]
         public static void ReplaceShops(StarSystem __instance)
         {
-            if (__instance.Def.Tags.Contains(Control.Settings.EmptyShopSystemTag))
-                return;
+            try
+            {
+                if (__instance.Def.Tags.Contains(Control.Settings.EmptyShopSystemTag))
+                    return;
 #if CCDEBUG
 #warning REMOVE THIS FOR RELEASE!
-            if (!rep_changed)
-            {
-                rep_changed = true;
-                Control.Logger.LogDebug("REPUTATION CHANGED!!! REMOVE THIS!!");
+                if (!rep_changed)
+                {
+                    rep_changed = true;
+                    Control.Logger.LogDebug("REPUTATION CHANGED!!! REMOVE THIS!!");
 
-                __instance.Sim.AddReputation(Faction.Liao, 100, false);
-                __instance.Sim.AddReputation(Faction.TaurianConcordat, 50, false);
-            }
+                    __instance.Sim.AddReputation(Faction.Liao, 200, false);
+                    __instance.Sim.AddReputation(Faction.TaurianConcordat, 50, false);
+                }
 #endif
 
-            DoSystemShop(__instance, __instance.SystemShop);
-            DoFactionShop(__instance, __instance.FactionShop);
+                DoSystemShop(__instance, __instance.SystemShop);
+                DoFactionShop(__instance, __instance.FactionShop);
+            }
+            catch (Exception e)
+            {
+                Control.Logger.LogError(e);
+            }
+
         }
 
         private static void DoFactionShop(StarSystem starSystem, Shop factionShop)
         {
 #if CCDEBUG
-            Control.Logger.LogDebug($"FactionShop for {starSystem.Name} ({starSystem.Def.Description.Id})");
+            Control.Logger.LogDebug($"FactionShop for {starSystem.Name} ({starSystem.Def.Description.Id}) owner:{starSystem.GetFactionShowOwner()}/{starSystem.Owner}");
             ShowItemCollections("Before", factionShop.ItemCollections);
 #endif
 
@@ -47,7 +56,7 @@ namespace DynamicShops.Patches
                     foreach (var item in starSystem.Def.FactionShopItems)
                         AddItemCollection(factionShop, item);
 
-            var faction = starSystem.Def.FactionShopOwner;
+            var faction = starSystem.GetFactionShowOwner();
             if (Control.Settings.FactionInfos.TryGetValue(faction, out var Info))
             {
                 foreach(var item in Info.FactionShops.GetItemCollections(starSystem))

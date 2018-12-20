@@ -10,6 +10,9 @@
 	"Settings" : {
 		"LogLevel": "Debug",
 		"ClearDefaultSystemShop" : true,
+		"ClearDefaultFactionShop" :  true,
+
+		"OverrideFactionShopOwner" :  true,
 		"FactionShopOnEveryPlanet" : true,
 		
 		"EmptyShopSystemTag" : "planet_other_empty",
@@ -67,7 +70,7 @@
 							]
 						}
 					},
-										{
+					{
 						"Reputation" : "FRIENDLY",
 						"Items" :	{
 							"Untagged" : [
@@ -75,7 +78,7 @@
 							]
 						}
 					},
-										{
+					{
 						"Reputation" : "HONORED",
 						"Items" :	{
 							"Untagged" : [
@@ -101,7 +104,7 @@
 							]
 						}
 					},
-										{
+					{
 						"Reputation" : "FRIENDLY",
 						"Items" :	{
 							"Untagged" : [
@@ -109,7 +112,7 @@
 							]
 						}
 					},
-										{
+					{
 						"Reputation" : "HONORED",
 						"Items" :	{
 							"Untagged" : [
@@ -117,7 +120,12 @@
 							]
 						}
 					}
-				]
+				],
+				"FactionShops" : {
+					"Untagged" : [
+						"itemCollection_faction_TaurianConcordat"
+					]
+				}
 			},
 			{
 				"Faction" : "Liao",
@@ -135,7 +143,7 @@
 							]
 						}
 					},
-										{
+					{
 						"Reputation" : "FRIENDLY",
 						"Items" :	{
 							"Untagged" : [
@@ -143,7 +151,7 @@
 							]
 						}
 					},
-										{
+					{
 						"Reputation" : "HONORED",
 						"Items" :	{
 							"Untagged" : [
@@ -151,7 +159,12 @@
 							]
 						}
 					}
-				]
+				],
+				"FactionShops" : {
+					"Untagged" : [
+						"itemCollection_faction_Liao"
+					]
+				}
 			}
 		]
 	},	
