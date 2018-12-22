@@ -23,12 +23,18 @@ namespace DynamicShops
         public string Name;
         public Faction[] Members;
         public CollectionDefs Items;
+        public CollectionDefs FactionShop;
+
 
         public void Complete()
         {
             if(Items == null)
                 Items = new CollectionDefs();
             Items.Complete();
+
+            if(FactionShop == null)
+                FactionShop = new CollectionDefs();
+            FactionShop.Complete();
         }
 
         public bool IsPartOf(Faction faction)
@@ -162,7 +168,7 @@ namespace DynamicShops
         public Dictionary<string, string[]> TagInfos;
 
 
-        public IEnumerable<string> GetGenereicFactionItems(Faction faction, StarSystem starSystem)
+        public IEnumerable<string> GetGenereicFactionSystemShopItems(Faction faction, StarSystem starSystem)
         {
             if(GenericFactions == null || GenericFactions.Length == 0)
                 yield break;
@@ -171,6 +177,19 @@ namespace DynamicShops
             {
                 if(genericFaction.IsPartOf(faction))
                     foreach (var item in genericFaction.Items.GetItemCollections(starSystem))
+                        yield return item;
+            }
+        }
+
+        public IEnumerable<string> GetGenereicFactionFactionShopItems(Faction faction, StarSystem starSystem)
+        {
+            if (GenericFactions == null || GenericFactions.Length == 0)
+                yield break;
+
+            foreach (var genericFaction in GenericFactions)
+            {
+                if (genericFaction.IsPartOf(faction))
+                    foreach (var item in genericFaction.FactionShop.GetItemCollections(starSystem))
                         yield return item;
             }
         }

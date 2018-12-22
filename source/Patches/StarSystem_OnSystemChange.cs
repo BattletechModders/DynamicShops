@@ -18,7 +18,19 @@ namespace DynamicShops.Patches
             try
             {
                 if (__instance.Def.Tags.Contains(Control.Settings.EmptyShopSystemTag))
+                {
+#if CCDEBUG
+                    Control.Logger.LogDebug($"{__instance.Name} is Empty. Skipping shop popultaion, Clearing shops");
+#endif
+                    if (__instance.SystemShop.ItemCollections != null && __instance.SystemShop.ItemCollections.Count > 0)
+                        __instance.SystemShop.ItemCollections.Clear();
+                    if (__instance.FactionShop.ItemCollections != null && __instance.FactionShop.ItemCollections.Count > 0)
+                        __instance.FactionShop.ItemCollections.Clear();
+                    if (__instance.BlackMarketShop.ItemCollections != null && __instance.BlackMarketShop.ItemCollections.Count > 0)
+                        __instance.BlackMarketShop.ItemCollections.Clear();
+
                     return;
+                }
 
                 if (!rep_changed && Control.Settings.DEBUG_AddFactionRep)
                 {
@@ -57,7 +69,7 @@ namespace DynamicShops.Patches
 
             foreach (var itemCollection in Control.Settings.BlackMarket.GetItemCollections(starSystem))
             {
-                AddItemCollection(blackMarketShop, itemCollection);                
+                AddItemCollection(blackMarketShop, itemCollection);
             }
 
 
@@ -84,8 +96,13 @@ namespace DynamicShops.Patches
             var faction = starSystem.GetFactionShowOwner();
             if (Control.Settings.FactionInfos.TryGetValue(faction, out var Info))
             {
-                foreach(var item in Info.FactionShops.GetItemCollections(starSystem))
+                foreach (var item in Info.FactionShops.GetItemCollections(starSystem))
                     AddItemCollection(factionShop, item);
+            }
+
+            foreach (var item in Control.Settings.GetGenereicFactionFactionShopItems(faction, starSystem))
+            {
+                AddItemCollection(factionShop, item);
             }
 
 #if CCDEBUG
@@ -127,6 +144,11 @@ namespace DynamicShops.Patches
                     if (repitem.Reputation <= reputation)
                         foreach (var item in repitem.Items.GetItemCollections(starSystem))
                             AddItemCollection(systemShop, item);
+            }
+
+            foreach (var item in Control.Settings.GetGenereicFactionSystemShopItems(faction, starSystem))
+            {
+                AddItemCollection(systemShop, item);
             }
 #if CCDEBUG
             ShowItemCollections("After", systemShop.ItemCollections);
