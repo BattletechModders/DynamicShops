@@ -10,9 +10,8 @@ namespace DynamicShops.Patches
     [HarmonyPatch(typeof(StarSystem), "OnSystemChange")]
     public static class StarSystem_OnSystemChange
     {
-#if CCDEBUG
         public static bool rep_changed = false;
-#endif
+
         [HarmonyPrefix]
         public static void ReplaceShops(StarSystem __instance)
         {
@@ -20,17 +19,16 @@ namespace DynamicShops.Patches
             {
                 if (__instance.Def.Tags.Contains(Control.Settings.EmptyShopSystemTag))
                     return;
-#if CCDEBUG
-#warning REMOVE THIS FOR RELEASE!
-                if (!rep_changed)
+
+                if (!rep_changed && Control.Settings.DEBUG_AddFactionRep)
                 {
                     rep_changed = true;
-                    Control.Logger.LogDebug("REPUTATION CHANGED!!! REMOVE THIS!!");
+                    Control.Logger.LogDebug("REPUTATION CHANGED!!!");
 
                     __instance.Sim.AddReputation(Faction.Liao, 200, false);
                     __instance.Sim.AddReputation(Faction.TaurianConcordat, 50, false);
                 }
-#endif
+
 
                 DoSystemShop(__instance, __instance.SystemShop);
                 DoFactionShop(__instance, __instance.FactionShop);
@@ -52,10 +50,15 @@ namespace DynamicShops.Patches
 
             blackMarketShop.ItemCollections.Clear();
             // add items from system def
-            if (!Control.Settings.ClearDefaultFactionShop)
+            if (!Control.Settings.ClearDefaultPirateShop)
                 if (starSystem.Def.BlackMarketShopItems != null && starSystem.Def.BlackMarketShopItems.Count > 0)
                     foreach (var item in starSystem.Def.BlackMarketShopItems)
                         AddItemCollection(blackMarketShop, item);
+
+            foreach (var itemCollection in Control.Settings.BlackMarket.GetItemCollections(starSystem))
+            {
+                AddItemCollection(blackMarketShop, itemCollection);                
+            }
 
 
 #if CCDEBUG

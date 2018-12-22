@@ -9,11 +9,13 @@
 	"DLLEntryPoint": "DynamicShops.Control.Init",
 	"Settings" : {
 		"LogLevel": "Debug",
-		"ClearDefaultSystemShop" : true,
-		"ClearDefaultFactionShop" :  true,
+		"ClearDefaultSystemShop" : false,
+		"ClearDefaultFactionShop" :  false,
 		"ClearDefaultPirateShop" : true,
 
-		"DEBUG_AllowBlackMarket" :  true,
+		"DEBUG_AllowBlackMarket" :  false,
+		"DEBUG_AddFactionRep" :  false,
+
 		"OverrideFactionShopOwner" :  true,
 		"FactionShopOnEveryPlanet" : true,
 		
@@ -169,7 +171,13 @@
 					]
 				}
 			}
-		]
+		],
+
+		"BlackMarket" :  {
+			"Untagged" : [
+				"ItemCollection_BlackMarket"
+			]
+		}
 	},	
 		
 	"Manifest": [ 
