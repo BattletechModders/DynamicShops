@@ -14,6 +14,38 @@ namespace DynamicShops
     {
         public string Tag;
         public string[] ItemCollections;
+
+
+        [JsonIgnore] private string[] tags;
+
+        public bool CanApply(StarSystem starSystem)
+        {
+            if (tags == null || tags.Length == 0)
+                return false;
+
+            foreach (var tag in tags)
+            {
+                if (tag.StartsWith("!"))
+                {
+                    if (starSystem.Tags.Contains(tag.Substring(1)))
+                        return false;
+                }
+                else if (!starSystem.Tags.Contains(tag))
+                    return false;
+
+            }
+
+            return true;
+
+        }
+
+        public void Complete()
+        {
+            if (!string.IsNullOrEmpty(Tag))
+                tags = Tag.Split(',').Select(i => i.Trim()).ToArray();
+            else
+                tags = null;
+        }
     }
 
 
@@ -28,11 +60,11 @@ namespace DynamicShops
 
         public void Complete()
         {
-            if(Items == null)
+            if (Items == null)
                 Items = new CollectionDefs();
             Items.Complete();
 
-            if(FactionShop == null)
+            if (FactionShop == null)
                 FactionShop = new CollectionDefs();
             FactionShop.Complete();
         }
@@ -56,38 +88,22 @@ namespace DynamicShops
         public TaggedCollection[] Tagged;
         public string[] Untagged;
 
-        [JsonIgnore]
-        Dictionary<string, string[]> CollectionsDictionary;
-        [JsonIgnore]
-        public string[] this[string tag]
-        {
-            get
-            {
-                if (CollectionsDictionary == null || CollectionsDictionary.Count == 0)
-                    return null;
 
-                if (CollectionsDictionary.TryGetValue(tag, out var res))
-                    return res;
-
-                return null;
-            }
-        }
-        
 
         public void Complete()
         {
-            CollectionsDictionary = new Dictionary<string, string[]>();
             if (Tagged == null || Tagged.Length == 0)
                 return;
 
-            foreach (var collection in Tagged)
+            Tagged = (from tagged in Tagged
+                      where tagged != null && !string.IsNullOrEmpty(tagged.Tag) && tagged.ItemCollections != null &&
+                            tagged.ItemCollections.Length > 0
+                      select tagged
+                ).ToArray();
+
+            foreach (var taggedCollection in Tagged)
             {
-                try
-                {
-                    CollectionsDictionary.Add(collection.Tag, collection.ItemCollections);
-                }
-                catch
-                { }
+                taggedCollection.Complete();
             }
         }
 
@@ -95,15 +111,24 @@ namespace DynamicShops
         {
             if (Untagged != null && Untagged.Length > 0)
                 for (int i = 0; i < Untagged.Length; i++)
+                {
+#if CCDEBUG
+                    Control.Logger.LogDebug($"::: Adding {Untagged[i]} from Untagged");
+#endif
                     yield return Untagged[i];
+                }
 
-            foreach (var tag in starSystem.Def.Tags)
-            {
-                var items = this[tag];
-                if (items != null && items.Length > 0)
-                    foreach (var item in items)
-                        yield return item;
-            }
+            if (Tagged == null || Tagged.Length == 0)
+                yield break;
+
+            foreach (var taggedCollection in Tagged.Where(i => i.CanApply(starSystem)))
+                foreach (var item in taggedCollection.ItemCollections)
+                {
+#if CCDEBUG
+                    Control.Logger.LogDebug($"::: Adding {item} from {taggedCollection.Tag}");
+#endif
+                    yield return item;
+                }
         }
     }
 
@@ -170,12 +195,12 @@ namespace DynamicShops
 
         public IEnumerable<string> GetGenereicFactionSystemShopItems(Faction faction, StarSystem starSystem)
         {
-            if(GenericFactions == null || GenericFactions.Length == 0)
+            if (GenericFactions == null || GenericFactions.Length == 0)
                 yield break;
 
             foreach (var genericFaction in GenericFactions)
             {
-                if(genericFaction.IsPartOf(faction))
+                if (genericFaction.IsPartOf(faction))
                     foreach (var item in genericFaction.Items.GetItemCollections(starSystem))
                         yield return item;
             }
@@ -217,14 +242,14 @@ namespace DynamicShops
                 }
             }
 
-            if(BlackMarket == null)
+            if (BlackMarket == null)
                 BlackMarket = new CollectionDefs();
             BlackMarket.Complete();
 
             if (GenericFactions != null && GenericFactions.Length > 0)
             {
                 GenericFactions = GenericFactions.Where(i => i.Members != null && i.Members.Length > 0).ToArray();
-                foreach(var item in GenericFactions)
+                foreach (var item in GenericFactions)
                     item.Complete();
             }
         }

@@ -9,8 +9,8 @@
 	"DLLEntryPoint": "DynamicShops.Control.Init",
 	"Settings" : {
 		"LogLevel": "Debug",
-		"ClearDefaultSystemShop" : false,
-		"ClearDefaultFactionShop" :  false,
+		"ClearDefaultSystemShop" : true,
+		"ClearDefaultFactionShop" :  true,
 		"ClearDefaultPirateShop" : true,
 
 		"DEBUG_AllowBlackMarket" :  false,
@@ -28,31 +28,49 @@
 				{
 					"Tag" : "planet_civ_primitive",
 					"ItemCollections" : [
-						"ItemCollection_SS_Primitive"
+						"RT_standard_Miniscule"
+					]
+				},
+								{
+					"Tag" : "planet_name_solaris",
+					"ItemCollections" : [
+						"RT_List_Solaris"
 					]
 				},
 				{
 					"Tag" : "planet_civ_periphery",
 					"ItemCollections" : [
-						"ItemCollection_SS_Perephiry"			
+						"RT_standard_Minor"			
 					]
 				},
 				{
 					"Tag" : "planet_civ_innersphere",
 					"ItemCollections" : [
-						"ItemCollection_SS_IS"			
+						"RT_standard_Major"			
+					]
+				},
+				{
+					"Tag" : "planet_other_starleague",
+					"ItemCollections" : [
+						"RT_List_SLDF"			
 					]
 				},
 				{
 					"Tag" : "planet_industry_research",
 					"ItemCollections" : [
-						"ItemCollection_SS_Research"
+						"RT_List_Research"
 					]
 				},
 				{
 					"Tag" : "planet_industry_manufacturing",
 					"ItemCollections" : [
-						"ItemCollection_SS_Manufacture"
+						"RT_List_Industrial"
+					]
+				},
+				{
+					"Tag" : "planet_industry_rich",
+					"ItemCollections" : [
+						"RT_List_Industrial"
 					]
 				}
 			]
@@ -60,118 +78,191 @@
 	
 		"Factions" : [
 			{
-				"Faction" : "AuriganRestoration",
+				"Faction" : "Davion",
 				"SystemShops" : {
-					"Untagged" : [
-						"itemCollection_minor_AuriganRestoration"
-					]
-				},
-				"RepShops" : [	
-					{
-						"Reputation" : "LIKED",
-						"Items" :	{
-							"Untagged" : [
-								"IC_INVALID_AR_LIKED"
+					"Tagged": [
+						{
+						"Tag" : "planet_pop_large",
+							"ItemCollections" : [
+							"RT_List_Davion_Major"
+							]
+						},
+						{
+						"Tag" : "planet_pop_small",
+							"ItemCollections" : [
+							"RT_List_Davion_Minor"
+							]
+						},
+						{
+						"Tag" : "planet_pop_medium, !planet_civ_innersphere",
+							"ItemCollections" : [
+							"RT_List_Davion_Minor"
+							]
+						},
+						{
+						"Tag" : "planet_pop_medium, planet_civ_innersphere",
+							"ItemCollections" : [
+							"RT_List_Davion_Major"
+							]
+						},
+						{
+						"Tag" : "planet_other_capital",
+							"ItemCollections" : [
+							"RT_List_Davion_Major"
 							]
 						}
-					},
-					{
-						"Reputation" : "FRIENDLY",
-						"Items" :	{
-							"Untagged" : [
-								"IC_INVALID_AR_FRIENDLY"
-							]
-						}
-					},
-					{
-						"Reputation" : "HONORED",
-						"Items" :	{
-							"Untagged" : [
-								"IC_INVALID_AR_HONORED"
-							]
-						}
-					}
-				]
+						]
+				}
 			},
 			{
-				"Faction" : "TaurianConcordat",
+				"Faction" : "Kurita",
 				"SystemShops" : {
-					"Untagged" : [
-						"itemCollection_minor_TaurianConcordat"
-					]
-				},
-				"RepShops" : [	
-					{
-						"Reputation" : "LIKED",
-						"Items" :	{
-							"Untagged" : [
-								"IC_INVALID_TC_LIKED"
+					"Tagged": [
+						{
+						"Tag" : "planet_pop_large",
+							"ItemCollections" : [
+							"RT_List_Kurita_Major"
+							]
+						},
+						{
+						"Tag" : "planet_pop_small",
+							"ItemCollections" : [
+							"RT_List_Kurita_Minor"
+							]
+						},
+						{
+						"Tag" : "planet_pop_medium, !planet_civ_innersphere",
+							"ItemCollections" : [
+							"RT_List_Kurita_Minor"
+							]
+						},
+						{
+						"Tag" : "planet_pop_medium, planet_civ_innersphere",
+							"ItemCollections" : [
+							"RT_List_Kurita_Major"
+							]
+						},
+						{
+						"Tag" : "planet_other_capital",
+							"ItemCollections" : [
+							"RT_List_Kurita_Major"
 							]
 						}
-					},
-					{
-						"Reputation" : "FRIENDLY",
-						"Items" :	{
-							"Untagged" : [
-								"IC_INVALID_TC_FRIENDLY"
-							]
-						}
-					},
-					{
-						"Reputation" : "HONORED",
-						"Items" :	{
-							"Untagged" : [
-								"IC_INVALID_TC_HONORED"
-							]
-						}
-					}
-				],
-				"FactionShops" : {
-					"Untagged" : [
-						"itemCollection_faction_TaurianConcordat"
-					]
+						]
 				}
 			},
 			{
 				"Faction" : "Liao",
 				"SystemShops" : {
-					"Untagged" : [
-						"itemCollection_major_Liao"
-					]
-				},
-				"RepShops" : [	
-					{
-						"Reputation" : "LIKED",
-						"Items" :	{
-							"Untagged" : [
-								"IC_INVALID_HL_LIKED"
+					"Tagged": [
+						{
+						"Tag" : "planet_pop_large",
+							"ItemCollections" : [
+							"RT_List_Liao_Major"
+							]
+						},
+						{
+						"Tag" : "planet_pop_small",
+							"ItemCollections" : [
+							"RT_List_Liao_Minor"
+							]
+						},
+						{
+						"Tag" : "planet_pop_medium, !planet_civ_innersphere",
+							"ItemCollections" : [
+							"RT_List_Liao_Minor"
+							]
+						},
+						{
+						"Tag" : "planet_pop_medium, planet_civ_innersphere",
+							"ItemCollections" : [
+							"RT_List_Liao_Major"
+							]
+						},
+						{
+						"Tag" : "planet_other_capital",
+							"ItemCollections" : [
+							"RT_List_Liao_Major"
 							]
 						}
-					},
-					{
-						"Reputation" : "FRIENDLY",
-						"Items" :	{
-							"Untagged" : [
-								"IC_INVALID_HL_FRIENDLY"
+						]
+				}
+			},
+			{
+				"Faction" : "Steiner",
+				"SystemShops" : {
+					"Tagged": [
+						{
+						"Tag" : "planet_pop_large",
+							"ItemCollections" : [
+							"RT_List_Steiner_Major"
+							]
+						},
+						{
+						"Tag" : "planet_pop_small",
+							"ItemCollections" : [
+							"RT_List_Steiner_Minor"
+							]
+						},
+						{
+						"Tag" : "planet_pop_medium, !planet_civ_innersphere",
+							"ItemCollections" : [
+							"RT_List_Steiner_Minor"
+							]
+						},
+						{
+						"Tag" : "planet_pop_medium, planet_civ_innersphere",
+							"ItemCollections" : [
+							"RT_List_Steiner_Major"
+							]
+						},
+						{
+						"Tag" : "planet_other_capital",
+							"ItemCollections" : [
+							"RT_List_Steiner_Major"
 							]
 						}
-					},
-					{
-						"Reputation" : "HONORED",
-						"Items" :	{
-							"Untagged" : [
-								"IC_INVALID_HL_HONORED"
+						]
+				}
+			},
+			{
+				"Faction" : "Marik",
+				"SystemShops" : {
+					"Tagged": [
+						{
+						"Tag" : "planet_pop_large",
+							"ItemCollections" : [
+							"RT_List_Marik_Major"
+							]
+						},
+						{
+						"Tag" : "planet_pop_small",
+							"ItemCollections" : [
+							"RT_List_Marik_Minor"
+							]
+						},
+						{
+						"Tag" : "planet_pop_medium, !planet_civ_innersphere",
+							"ItemCollections" : [
+							"RT_List_Marik_Minor"
+							]
+						},
+						{
+						"Tag" : "planet_pop_medium, planet_civ_innersphere",
+							"ItemCollections" : [
+							"RT_List_Marik_Major"
+							]
+						},
+						{
+						"Tag" : "planet_other_capital",
+							"ItemCollections" : [
+							"RT_List_Marik_Major"
 							]
 						}
-					}
-				],
-				"FactionShops" : {
-					"Untagged" : [
-						"itemCollection_faction_Liao"
-					]
+						]
 				}
 			}
-		],
+			],
 
 		"BlackMarket" :  {
 			"Untagged" : [
