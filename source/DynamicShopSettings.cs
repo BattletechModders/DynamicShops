@@ -56,6 +56,7 @@ namespace DynamicShops
         public Faction[] Members;
         public CollectionDefs Items;
         public CollectionDefs FactionShop;
+        public RepCollection[] RepShops;
 
 
         public void Complete()
@@ -63,6 +64,10 @@ namespace DynamicShops
             if (Items == null)
                 Items = new CollectionDefs();
             Items.Complete();
+
+            if (RepShops == null)
+                RepShops = new RepCollection[0];
+            RepShops = RepShops.OrderBy(i => i.Reputation).ToArray();
 
             if (FactionShop == null)
                 FactionShop = new CollectionDefs();
@@ -193,7 +198,7 @@ namespace DynamicShops
         public Dictionary<string, string[]> TagInfos;
 
 
-        public IEnumerable<string> GetGenereicFactionSystemShopItems(Faction faction, StarSystem starSystem)
+        public IEnumerable<string> GetGenereicFactionSystemShopItems(Faction faction, StarSystem starSystem, SimGameReputation reputation)
         {
             if (GenericFactions == null || GenericFactions.Length == 0)
                 yield break;
@@ -201,8 +206,17 @@ namespace DynamicShops
             foreach (var genericFaction in GenericFactions)
             {
                 if (genericFaction.IsPartOf(faction))
+                {
                     foreach (var item in genericFaction.Items.GetItemCollections(starSystem))
                         yield return item;
+
+                    foreach (var repitem in genericFaction.RepShops)
+                        if (repitem.Reputation <= reputation)
+                            foreach (var item in repitem.Items.GetItemCollections(starSystem))
+                                yield return item;
+
+                }
+
             }
         }
 

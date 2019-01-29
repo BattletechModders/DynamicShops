@@ -37,7 +37,7 @@ namespace DynamicShops.Patches
                     rep_changed = true;
                     Control.Logger.LogDebug("REPUTATION CHANGED!!!");
 
-                    __instance.Sim.AddReputation(Faction.Liao, 200, false);
+                    __instance.Sim.AddReputation(Faction.ClanWolf, 200, false);
                     __instance.Sim.AddReputation(Faction.TaurianConcordat, 50, false);
                 }
 
@@ -133,12 +133,12 @@ namespace DynamicShops.Patches
 
             // Add faction items
             var faction = starSystem.Owner;
+            var reputation = starSystem.Sim.GetReputation(faction);
             if (Control.Settings.FactionInfos.TryGetValue(faction, out var Info))
             {
                 foreach (var item in Info.SystemShops.GetItemCollections(starSystem))
                     AddItemCollection(systemShop, item);
 
-                var reputation = starSystem.Sim.GetReputation(faction);
 
                 foreach (var repitem in Info.RepShops)
                     if (repitem.Reputation <= reputation)
@@ -146,7 +146,7 @@ namespace DynamicShops.Patches
                             AddItemCollection(systemShop, item);
             }
 
-            foreach (var item in Control.Settings.GetGenereicFactionSystemShopItems(faction, starSystem))
+            foreach (var item in Control.Settings.GetGenereicFactionSystemShopItems(faction, starSystem, reputation))
             {
                 AddItemCollection(systemShop, item);
             }

@@ -45,7 +45,7 @@ namespace DynamicShops
                 var harmony = HarmonyInstance.Create("io.github.denadan.DynamicShops");
                 harmony.PatchAll(Assembly.GetExecutingAssembly());
 
-                Logger.Log("Loaded DinamicShops v0.1.0.0 for bt 1.3.2");
+                Logger.Log("Loaded DinamicShops v0.2.2.0 for bt 1.3.2");
 #if CCDEBUG
                 Logger.LogDebug("done");
 #endif
