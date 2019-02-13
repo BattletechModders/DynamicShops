@@ -20,10 +20,15 @@ namespace DynamicShops
 
         public bool CanApply(StarSystem starSystem)
         {
-            if (tags == null || tags.Length == 0)
-                return false;
 
-            foreach (var tag in tags)
+            if (tags == null || tags.Length == 0)
+            {
+                return false;
+            }
+        
+
+
+        foreach (var tag in tags)
             {
                 if (tag.StartsWith("!"))
                 {
@@ -67,7 +72,14 @@ namespace DynamicShops
 
             if (RepShops == null)
                 RepShops = new RepCollection[0];
-            RepShops = RepShops.OrderBy(i => i.Reputation).ToArray();
+            RepShops = RepShops.Where(i => i.Items != null).OrderBy(i => i.Reputation).ToArray();
+
+            foreach (var rep in RepShops)
+            {
+                if (rep.Items == null)
+                    rep.Items = new CollectionDefs();
+                rep.Items.Complete();
+            }
 
             if (FactionShop == null)
                 FactionShop = new CollectionDefs();
@@ -110,7 +122,8 @@ namespace DynamicShops
             {
                 taggedCollection.Complete();
             }
-        }
+
+         }
 
         public IEnumerable<string> GetItemCollections(StarSystem starSystem)
         {
@@ -207,14 +220,19 @@ namespace DynamicShops
             {
                 if (genericFaction.IsPartOf(faction))
                 {
+                    Control.Logger.LogDebug($"-- {faction} is part of {genericFaction.Name}");
                     foreach (var item in genericFaction.Items.GetItemCollections(starSystem))
                         yield return item;
 
                     foreach (var repitem in genericFaction.RepShops)
                         if (repitem.Reputation <= reputation)
+                        {
+                            Control.Logger.LogDebug($"--- {reputation} >= {repitem.Reputation}");
                             foreach (var item in repitem.Items.GetItemCollections(starSystem))
                                 yield return item;
-
+                        }
+                    else
+                            Control.Logger.LogDebug($"--- {reputation} < {repitem.Reputation}");
                 }
 
             }

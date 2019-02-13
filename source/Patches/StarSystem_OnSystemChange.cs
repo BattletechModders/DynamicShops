@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using BattleTech;
 using DynamicShops;
@@ -37,7 +36,7 @@ namespace DynamicShops.Patches
                     rep_changed = true;
                     Control.Logger.LogDebug("REPUTATION CHANGED!!!");
 
-                    __instance.Sim.AddReputation(Faction.ClanWolf, 200, false);
+                    __instance.Sim.AddReputation(Faction.ClanJadeFalcon, 96, false);
                     __instance.Sim.AddReputation(Faction.TaurianConcordat, 50, false);
                 }
 
@@ -150,6 +149,7 @@ namespace DynamicShops.Patches
             {
                 AddItemCollection(systemShop, item);
             }
+
 #if CCDEBUG
             ShowItemCollections("After", systemShop.ItemCollections);
             Control.Logger.LogDebug("======================================================");
@@ -158,6 +158,7 @@ namespace DynamicShops.Patches
 
         private static void AddItemCollection(Shop systemShop, string item)
         {
+            Control.Logger.LogError($"+ {item} ");
             try
             {
                 var collection = UnityGameInstance.BattleTechGame.DataManager.ItemCollectionDefs.Get(item);

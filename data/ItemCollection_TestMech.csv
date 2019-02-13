@@ -1,0 +1,11 @@
+ItemCollection_TestMech,,,
+mechdef_thunderbolt_TDR-5S,Mech,0,1
+mechdef_banshee_BNC-3M,Mech,0,1
+mechdef_victor_VTR-9S,Mech,0,1
+emod_ab_item,Upgrade,0,1
+emod_ac_item,Upgrade,0,1
+emod_bc_item,Upgrade,0,1
+emod_abc_item,Upgrade,0,1
+emod_torso_2sl,Upgrade,0,1
+emod_torso_3sl,Upgrade,0,1
+emod_test_super,Upgrade,0,1
