@@ -83,6 +83,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConditionBuilder.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="DCondition.cs" />
     <Compile Include="DShopDef.cs" />

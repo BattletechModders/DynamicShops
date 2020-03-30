@@ -13,9 +13,7 @@ namespace DynamicShops
 
     public abstract class DCondition
     {
-        public DCondition(string json) { }
-
-
+        public abstract bool Init(object json);
         public abstract bool IfApply(StarSystem curSystem);
     }
 
@@ -26,15 +24,20 @@ namespace DynamicShops
         private List<string> ntags;
         private bool allways_true = false;
 
-        public DTagCondition(string json) : base(json)
+        public override bool Init(object json)
         {
-            if (string.IsNullOrEmpty(json))
+            if (json == null && !(json is string))
+                return false;
+
+            var str = json.ToString();
+
+            if (string.IsNullOrEmpty(str))
             {
                 allways_true = true;
-                return;
+                return false;
             }
             allways_true = false;
-            var strs = json.Split(',');
+            var strs = str.Split(',');
             tags = new List<string>();
             ntags = new List<string>();
             foreach (var tag in strs)
@@ -44,6 +47,7 @@ namespace DynamicShops
                 else
                     tags.Add(tag);
             }
+            return true;
         }
 
         public override bool IfApply(StarSystem curSystem)
@@ -68,16 +72,20 @@ namespace DynamicShops
         private List<string> owners;
         private List<string> nowners;
         private bool allways_true = false;
-
-        public DOwnerCondition(string json) : base(json)
+        public override bool Init(object json)
         {
-            if (string.IsNullOrEmpty(json))
+            if (json == null && !(json is string))
+                return false;
+
+            var str = json.ToString();
+
+            if (string.IsNullOrEmpty(str))
             {
                 allways_true = true;
-                return;
+                return false;
             }
             allways_true = false;
-            var strs = json.Split(',');
+            var strs = str.Split(',');
             owners = new List<string>();
             nowners = new List<string>();
             foreach (var tag in strs)
@@ -87,6 +95,7 @@ namespace DynamicShops
                 else
                     owners.Add(tag);
             }
+            return true;
         }
 
         public override bool IfApply(StarSystem curSystem)
@@ -112,7 +121,7 @@ namespace DynamicShops
         private List<SimGameReputation> more;
         private bool allways_true = false;
 
-        public DReputattionCondition(string json) : base(json)
+        public override bool Init(object json)
         {
             void add_to_list(List<SimGameReputation> list, string value)
             {
@@ -120,14 +129,19 @@ namespace DynamicShops
                     list.Add(res);
             }
 
+            if (json == null && !(json is string))
+                return false;
 
-            if (string.IsNullOrEmpty(json))
+            var str = json.ToString();
+
+            if (string.IsNullOrEmpty(str))
             {
                 allways_true = true;
-                return;
+                return false;
             }
             allways_true = false;
-            var strs = json.ToUpper().Split(',');
+            var strs = str.ToUpper().Split(',');
+
 
             less = new List<SimGameReputation>();
             equal = new List<SimGameReputation>();
@@ -142,6 +156,7 @@ namespace DynamicShops
                 else
                     add_to_list(equal, item);
             }
+            return true;
         }
         public override bool IfApply(StarSystem curSystem)
         {
@@ -174,7 +189,7 @@ namespace DynamicShops
         private List<SimGameReputation> more;
         private bool allways_true = false;
 
-        public DPirateReputattionCondition(string json) : base(json)
+        public override bool Init(object json)
         {
             void add_to_list(List<SimGameReputation> list, string value)
             {
@@ -182,14 +197,18 @@ namespace DynamicShops
                     list.Add(res);
             }
 
+            if (json == null && !(json is string))
+                return false;
 
-            if (string.IsNullOrEmpty(json))
+            var str = json.ToString();
+
+            if (string.IsNullOrEmpty(str))
             {
                 allways_true = true;
-                return;
+                return false;
             }
             allways_true = false;
-            var strs = json.ToUpper().Split(',');
+            var strs = str.ToUpper().Split(',');
 
             less = new List<SimGameReputation>();
             equal = new List<SimGameReputation>();
@@ -204,6 +223,7 @@ namespace DynamicShops
                 else
                     add_to_list(equal, item);
             }
+            return true;
         }
         public override bool IfApply(StarSystem curSystem)
         {
@@ -236,22 +256,26 @@ namespace DynamicShops
         private List<int> more;
         private bool allways_true = false;
 
-        public DMRBCondition(string json) : base(json)
+        public override bool Init(object json)
         {
             void add_to_list(List<int> list, string value)
             {
-                if (int.TryParse(value,System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var res))
+                if (int.TryParse(value, out var res))
                     list.Add(res);
             }
 
+            if (json == null && !(json is string))
+                return false;
 
-            if (string.IsNullOrEmpty(json))
+            var str = json.ToString();
+
+            if (string.IsNullOrEmpty(str))
             {
                 allways_true = true;
-                return;
+                return false;
             }
             allways_true = false;
-            var strs = json.ToUpper().Split(',');
+            var strs = str.Split(',');
 
             less = new List<int>();
             equal = new List<int>();
@@ -266,6 +290,7 @@ namespace DynamicShops
                 else
                     add_to_list(equal, item);
             }
+            return true;
         }
         public override bool IfApply(StarSystem curSystem)
         {
