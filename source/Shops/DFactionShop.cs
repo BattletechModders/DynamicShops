@@ -25,12 +25,15 @@ namespace DynamicShops.Shops
         {
             get
             {
-                if (Control.Settings.FactionShopOnEveryPlanet)
-                {
-                    return CustomShops.Control.State.CurrentSystem.OwnerValue;
-                }
-                else
+                if (!Control.Settings.OverrideFactionShopOwner)
                     return base.RelatedFaction;
+
+                if (Control.Settings.FactionShopOnEveryPlanet)
+                    return CustomShops.Control.State.CurrentSystem.OwnerValue;
+                else
+                    if(base.RelatedFaction != null)
+                        return CustomShops.Control.State.CurrentSystem.OwnerValue;
+                return base.RelatedFaction;
             }
         }
 

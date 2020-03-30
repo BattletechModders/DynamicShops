@@ -1,7 +1,7 @@
 {
 	"Name": "DynamicShops",
 	"Author": "Denadan",
-	"Website": "https://github.com/Denadan/DynamicShops",
+	"Website": "https://github.com/BattletechModders/DynamicShops",
 
 	"Enabled": true,
 	"DependsOn": ["CustomShops"],
@@ -12,11 +12,12 @@
 	"Settings" : {
 		"LogLevel": "Debug",
 
-		"ReplaceSystemShop" : true;
-		"ReplaceFactionShop" : true;
-		"ReplaceBlackMarket" : true;
+		"ReplaceSystemShop" : true,
+		"ReplaceFactionShop" : false,
+		"ReplaceBlackMarket" : true,
 		
 		"FactionShopOnEveryPlanet" : true,
+		"OverrideFactionShopOwner" : true,
 		
 		"GenericFactions" : [
 			{

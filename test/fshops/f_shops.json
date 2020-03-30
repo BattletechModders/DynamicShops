@@ -1,0 +1,31 @@
+[
+	{
+		"factions" : "Davion",
+		"items" : "itemCollection_faction_Davion"
+	},
+	{
+		"factions" : "Kurita",
+		"items" : "itemCollection_faction_Kurita"
+	},
+	{
+		"factions" : "Liao", 
+		"items" : "itemCollection_faction_Liao"
+	},
+	{
+		"factions" : "the Magistracy", 
+		"items" : "itemCollection_faction_MagistracyOfCanopus"
+	},
+	{
+		"factions" : "Marik", 
+		"items" : "itemCollection_faction_Marik"
+	},
+	{
+		"factions" : "Steiner", 
+		"items" : "itemCollection_faction_Steiner"
+	},
+	{
+		"factions" : "the Taurians",
+		"items" : "itemCollection_faction_TaurianConcordat"
+	},
+	
+]

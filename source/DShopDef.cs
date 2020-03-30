@@ -31,19 +31,48 @@ namespace DynamicShops
         
         public override bool FromJson(Dictionary<string, object> json)
         {
+#if CCDEBUG
+            if (Control.Settings.DEBUG_ShowLoad)
+                Control.LogDebug("---- load faction");
+#endif
             if (base.FromJson(json))
             {
+
                 if (json.TryGetValue("factions", out var items))
                 {
                     var factions = ConditionBuilder.StringsFromJson(items);
-                    if (Factions == null || Factions.Count == 0)
+                    if (factions == null || factions.Count == 0)
+                    {
+#if CCDEBUG
+                        if (Control.Settings.DEBUG_ShowLoad)
+                            Control.LogDebug("----- factions list empty");
+#endif
                         return false;
+                    }
                     Factions = new List<string>();
                     foreach (var faction in factions)
-                        factions.AddRange(ConditionBuilder.ExpandGenericFaction(faction));
+                        Factions.AddRange(ConditionBuilder.ExpandGenericFaction(faction));
+#if CCDEBUG
+                    if (Control.Settings.DEBUG_ShowLoad)
+                    {
+                        string list = "";
+                        foreach (var f in Factions)
+                            list += f + ";";
+                        Control.LogDebug("----- Loaded: " + list);
+                    }   
+#endif
                     return Factions.Count > 0;
                 }
+#if CCDEBUG
+                if (Control.Settings.DEBUG_ShowLoad)
+                    Control.LogDebug("----- failed get faction");
+#endif
+
             }
+#if CCDEBUG
+            if (Control.Settings.DEBUG_ShowLoad)
+                Control.LogDebug("----- failed base");
+#endif
             return false;
         }
     }

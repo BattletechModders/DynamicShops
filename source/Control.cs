@@ -94,13 +94,28 @@ namespace DynamicShops
 
         public static void FinishedLoading(Dictionary<string, Dictionary<string, VersionManifestEntry>> customResources)
         {
+            Control.Log("Finish Loading");
             Dictionary<string, VersionManifestEntry> manifest = null;
             if (customResources.TryGetValue("DShopDef", out manifest))
+            {
+                Control.LogDebug("- Loading DShopDef");
                 LoadShopDefs(manifest, ShopDefs);
+            }
             if (customResources.TryGetValue("DFactionShopDef", out manifest))
+            {
+                Control.LogDebug("- Loading DFactionShopDef");
                 LoadShopDefs(manifest, FactionShopDefs);
+            }
             if (customResources.TryGetValue("DBMShopDef", out manifest))
+            {
+                Control.LogDebug("- Loading DBMShopDef");
                 LoadShopDefs(manifest, BlackMarketShopDefs);
+            }
+
+            Control.Log("Loaded");
+            Control.Log("- System shops: " + ShopDefs.Count.ToString());
+            Control.Log("- Faction shops: " + FactionShopDefs.Count.ToString());
+            Control.Log("- Black market shops: " + BlackMarketShopDefs.Count.ToString());
         }
 
         private static void LoadShopDefs<ShopType>(Dictionary<string, VersionManifestEntry> manifest, List<ShopType> shopDefs)
@@ -110,16 +125,25 @@ namespace DynamicShops
             {
                 var dict = obj as Dictionary<string, object>;
                 if (dict == null)
+                {
+                    Control.LogDebug("---- cannot get dictionary - skipped");
                     return;
-
+                }
                 ShopType shop = new ShopType();
                 if (shop.FromJson(dict))
+                {
                     shopDefs.Add(shop);
+                }
+                else
+                    Control.LogDebug("---- bad shopdef - skipped");
+
             }
 
             foreach (var item in manifest.Values)
             {
+                Control.LogDebug("-- Loading " + item.FilePath);
                 string json = "";
+
                 using (var reader = new StreamReader(item.FilePath))
                 {
                     json = reader.ReadToEnd();
@@ -129,12 +153,14 @@ namespace DynamicShops
                     var obj = fastJSON.JSON.ToObject(json, true);
                     if (obj is Dictionary<string, object> dict)
                     {
+                        Control.LogDebug("--- single item");
                         load_shop(obj);
                     }
                     else if (obj is IEnumerable<object> list)
                     {
+                        Control.LogDebug($"--- list of {list.Count()} items");
                         foreach (var sub in list)
-                            load_shop(obj);
+                            load_shop(sub);
                     }
                     else
                     {
