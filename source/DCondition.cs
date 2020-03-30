@@ -42,10 +42,11 @@ namespace DynamicShops
             ntags = new List<string>();
             foreach (var tag in strs)
             {
-                if (tag.StartsWith("!"))
-                    ntags.Add(tag.Substring(1));
+                var ttag = tag.Trim();
+                if (ttag.StartsWith("!"))
+                    ntags.Add(ttag.Substring(1));
                 else
-                    tags.Add(tag);
+                    tags.Add(ttag);
             }
             return true;
         }
@@ -90,10 +91,11 @@ namespace DynamicShops
             nowners = new List<string>();
             foreach (var tag in strs)
             {
-                if (tag.StartsWith("!"))
-                    nowners.AddRange(ConditionBuilder.ExpandGenericFaction(tag.Substring(1)));
+                var ttag = tag.Trim();
+                if (ttag.StartsWith("!"))
+                    nowners.AddRange(ConditionBuilder.ExpandGenericFaction(ttag.Substring(1)));
                 else
-                    owners.AddRange(ConditionBuilder.ExpandGenericFaction(tag));
+                    owners.AddRange(ConditionBuilder.ExpandGenericFaction(ttag));
             }
             return true;
         }
@@ -149,12 +151,13 @@ namespace DynamicShops
 
             foreach (var item in strs)
             {
-                if (item.StartsWith("<"))
-                    add_to_list(less, item.Substring(1));
-                else if (item.StartsWith(">"))
-                    add_to_list(more, item.Substring(1));
+                var ttag = item.Trim();
+                if (ttag.StartsWith("<"))
+                    add_to_list(less, ttag.Substring(1));
+                else if (ttag.StartsWith(">"))
+                    add_to_list(more, ttag.Substring(1));
                 else
-                    add_to_list(equal, item);
+                    add_to_list(equal, ttag);
             }
             return true;
         }
@@ -170,11 +173,11 @@ namespace DynamicShops
                     return false;
 
             foreach (var item in less)
-                if (reputation >= item)
+                if (reputation > item)
                     return false;
 
             foreach (var item in more)
-                if (reputation <= item)
+                if (reputation < item)
                     return false;
 
             return true;
@@ -216,12 +219,13 @@ namespace DynamicShops
 
             foreach (var item in strs)
             {
-                if (item.StartsWith("<"))
-                    add_to_list(less, item.Substring(1));
-                else if (item.StartsWith(">"))
-                    add_to_list(more, item.Substring(1));
+                var ttag = item.Trim();
+                if (ttag.StartsWith("<"))
+                    add_to_list(less, ttag.Substring(1));
+                else if (ttag.StartsWith(">"))
+                    add_to_list(more, ttag.Substring(1));
                 else
-                    add_to_list(equal, item);
+                    add_to_list(equal, ttag);
             }
             return true;
         }
@@ -237,11 +241,11 @@ namespace DynamicShops
                     return false;
 
             foreach (var item in less)
-                if (reputation >= item)
+                if (reputation > item)
                     return false;
 
             foreach (var item in more)
-                if (reputation <= item)
+                if (reputation < item)
                     return false;
 
             return true;
@@ -283,12 +287,13 @@ namespace DynamicShops
 
             foreach (var item in strs)
             {
-                if (item.StartsWith("<"))
-                    add_to_list(less, item.Substring(1));
-                else if (item.StartsWith(">"))
-                    add_to_list(more, item.Substring(1));
+                var ttag = item.Trim();
+                if (ttag.StartsWith("<"))
+                    add_to_list(less, ttag.Substring(1));
+                else if (ttag.StartsWith(">"))
+                    add_to_list(more, ttag.Substring(1));
                 else
-                    add_to_list(equal, item);
+                    add_to_list(equal, ttag);
             }
             return true;
         }

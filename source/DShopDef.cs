@@ -25,7 +25,6 @@ namespace DynamicShops
             return false;
         }
     }
-
     public class DFactionShopDef : DShopDef
     {
         public List<string> Factions;

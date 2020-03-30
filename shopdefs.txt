@@ -1,0 +1,84 @@
+new shopdefs format
+
+There is two types of ShopDefs - normal(used for system shop and black market) and faction(use for faction shops)
+
+there are can be one or multiply shopdefs in one json.
+{
+	"conditions" : { "tag" : "planet_civ_primitive" },
+	"items" : "RT_standard_Miniscule"
+}
+multiply surrounded by []
+[
+	{
+		"conditions" : { "tag" : "planet_civ_primitive" },
+		"items" : "RT_standard_Miniscule"
+	},
+	{
+		"conditions" : { "tag" : "planet_other_gamesworld" },
+		"items" : ["RT_List_Solaris", "RT_standard_Miniscule"]
+	},
+	...
+]
+
+Format of shopdef
+	{
+		"conditions" : list of conditions
+		"items" : one or [list] of itemcollections
+	}
+"conditions" is list of condtions to check
+each consist of pair "type" : "value"
+avaliable conditions are
+
+"tag" : "tag1,!tag2" - true if each of tag1 present and each of tag2 not present in system
+"owner" : "faction1,!faction2" - check if system owner is one of faction1 and none of faction2. faction can be faction short name or generic
+"rep" : "value1,>value2,<value3" - check if reputation to system owner is equal to value1, more then value2 or less then value3(if few values given AND operation used)
+"piraterep" : "value1,>value2,<value3" - same for pirate reputation. values are SimGameReputation(not case sensivity)
+	public enum SimGameReputation
+    {
+        LOATHED = -3,
+        HATED = -2,
+        DISLIKED = -1,
+        INDIFFERENT = 0,
+        LIKED = 1,
+        FRIENDLY = 2,
+        HONORED = 3,
+        ALLIED = 3
+    }
+"mrb" : "value1,>value2,<value3" - same for mrb rating. values is integer
+
+Format of faction shop def
+	{
+		"factions" : one or [list] of factions
+		"conditions" : list of conditions
+		"items" : one or [list] of itemcollections
+	}
+	
+"Generic" Factions
+generic factions is list of factions, can be used to unite lot of factions into one to shorter factions lists 
+you can set generic faction in mod.json :
+		
+		"GenericFactions": [
+			{
+				"Name": "Clans",
+				"Members": [
+					"ClanBurrock",
+					"ClanWolf",
+					"ClanCloudCobra",
+					"ClanCoyote",
+					"ClanDiamondShark",
+					"ClansGeneric",
+					"ClanFireMandrill",
+					"ClanGhostBear",
+					"ClanGoliathScorpion",
+					"ClanHellsHorses",
+					"ClanIceHellion",
+					"ClanJadeFalcon",
+					"ClanNovaCat",
+					"ClanSmokeJaguar",
+					"ClanSnowRaven",
+					"ClanStarAdder",
+					"ClanSteelViper"
+				]
+			}
+		]
+this for example make new generic faction "Clans" which can be used anywhere in shopdefs where faction required
