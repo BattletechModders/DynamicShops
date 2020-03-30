@@ -8,19 +8,26 @@ using System.IO;
 using BattleTech.UI;
 using HBS.Logging;
 using Newtonsoft.Json;
-
+using System.Diagnostics;
+using BattleTech;
 
 namespace DynamicShops
 {
     public static class Control
     {
         public static DynamicShopSettings Settings = new DynamicShopSettings();
+        private const string ModName = "DynamicShops";
+        private const string LogPrefix = "[DShops]";
+
+        internal static List<DShopDef> ShopDefs { get; private set; }
+        internal static List<DFactionShopDef> FactionShopDefs { get; private set; }
+        internal static List<DShopDef> BlackMarketShopDefs { get; private set; }
 
         internal static ILog Logger;
         private static FileLogAppender logAppender;
         public static void Init(string directory, string settingsJSON)
         {
-            Logger = HBS.Logging.Logger.GetLogger("DynamicShops", LogLevel.Debug);
+            Logger = HBS.Logging.Logger.GetLogger(ModName, LogLevel.Debug);
             try
             {
                 try
@@ -33,7 +40,6 @@ namespace DynamicShops
                     Settings = new DynamicShopSettings();
                 }
 
-                Settings.Complete();
 
 
                 SetupLogging(directory);
@@ -45,7 +51,7 @@ namespace DynamicShops
                 var harmony = HarmonyInstance.Create("io.github.denadan.DynamicShops");
                 harmony.PatchAll(Assembly.GetExecutingAssembly());
 
-                Logger.Log("Loaded DinamicShops v0.2.2.1 for bt 1.3.2");
+                Logger.Log("Loaded DinamicShops v0.5 for bt 1.9.1");
 #if CCDEBUG
                 Logger.LogDebug("done");
 #endif
@@ -55,12 +61,47 @@ namespace DynamicShops
                 Logger.LogError(e);
             }
         }
+        public static void FinishedLoading(Dictionary<string, Dictionary<string, VersionManifestEntry>> customResources)
+        {
+        }
 
-#region LOGGING
+
+        #region LOGGING
+        [Conditional("CCDEBUG")]
+        public static void LogDebug(string message)
+        {
+            Logger.LogDebug(LogPrefix + message);
+        }
+        [Conditional("CCDEBUG")]
+        public static void LogDebug(string message, Exception e)
+        {
+            Logger.LogDebug(LogPrefix + message, e);
+        }
+
+        public static void LogError(string message)
+        {
+            Logger.LogError(LogPrefix + message);
+        }
+        public static void LogError(string message, Exception e)
+        {
+            Logger.LogError(LogPrefix + message, e);
+        }
+        public static void LogError(Exception e)
+        {
+            Logger.LogError(LogPrefix, e);
+        }
+
+        public static void Log(string message)
+        {
+            Logger.Log(LogPrefix + message);
+        }
+
+
 
         internal static void SetupLogging(string Directory)
         {
             var logFilePath = Path.Combine(Directory, "log.txt");
+
             try
             {
                 ShutdownLogging();
@@ -68,7 +109,7 @@ namespace DynamicShops
             }
             catch (Exception e)
             {
-                Logger.Log("DynamicShops: can't create log file", e);
+                Logger.Log($"{ModName}: can't create log file", e);
             }
         }
 
@@ -81,7 +122,7 @@ namespace DynamicShops
 
             try
             {
-                HBS.Logging.Logger.ClearAppender("DynamicShops");
+                HBS.Logging.Logger.ClearAppender(ModName);
                 logAppender.Flush();
                 logAppender.Close();
             }
@@ -97,16 +138,15 @@ namespace DynamicShops
             try
             {
                 logAppender = new FileLogAppender(logFilePath, FileLogAppender.WriteMode.INSTANT);
-
-                HBS.Logging.Logger.AddAppender("DynamicShops", logAppender);
+                HBS.Logging.Logger.AddAppender(ModName, logAppender);
 
             }
             catch (Exception e)
             {
-                Logger.Log("DynamicShops: can't create log file", e);
+                Logger.Log($"{ModName}: can't create log file", e);
             }
         }
 
-#endregion
+        #endregion
     }
 }

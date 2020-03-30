@@ -3,26 +3,23 @@
 	"Author": "Denadan",
 	"Website": "https://github.com/Denadan/DynamicShops",
 
-	"Enabled": true,
-	"DependsOn": [],
+	"Enabled": enabled,
+	"DependsOn": ["CustomShops"],
 	"DLL": "DynamicShops.dll",
 	"DLLEntryPoint": "DynamicShops.Control.Init",
+	"CustomResourceTypes": ["DShopDef", "DFactionShopDef", "DBMShopDef"],
+	
 	"Settings" : {
 		"LogLevel": "Debug",
-		"ClearDefaultSystemShop" : true,
-		"ClearDefaultFactionShop" :  true,
-		"ClearDefaultPirateShop" : true,
 
-		"DEBUG_AllowBlackMarket" :  false,
-		"DEBUG_AddFactionRep" :  false,
-
-		"OverrideFactionShopOwner" :  true,
+		"ReplaceSystemShop" : true;
+		"ReplaceFactionShop" : true;
+		"ReplaceBlackMarket" : true;
+		
 		"FactionShopOnEveryPlanet" : true,
 		
-		"EmptyShopSystemTag" : "planet_other_empty",
 		"BlackMarketSystemTag" : "planet_other_blackmarket",
-		"BlacMarketPrice" :  1.5,
-		
+
 		"SystemShops" : {
 			"Untagged" : [	
 				"ItemCollection_TestMech"
