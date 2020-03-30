@@ -20,7 +20,7 @@ namespace DynamicShops.Shops
                 {
                     foreach (var c in shop_def.Conditions)
                     {
-                        if (!c.IfApply(CustomShops.Control.State.CurrentSystem))
+                        if (!c.IfApply(CustomShops.Control.State.Sim, CustomShops.Control.State.CurrentSystem))
                         {
                             use = false;
                             break;

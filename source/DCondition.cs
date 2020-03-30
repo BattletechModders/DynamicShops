@@ -14,7 +14,7 @@ namespace DynamicShops
     public abstract class DCondition
     {
         public abstract bool Init(object json);
-        public abstract bool IfApply(StarSystem curSystem);
+        public abstract bool IfApply(SimGameState sim, StarSystem CurSystem);
     }
 
     [DCondition("tag")]
@@ -50,17 +50,17 @@ namespace DynamicShops
             return true;
         }
 
-        public override bool IfApply(StarSystem curSystem)
+        public override bool IfApply(SimGameState sim, StarSystem CurSystem)
         {
             if (allways_true)
                 return true;
 
             foreach (var item in tags)
-                if (!curSystem.Def.Tags.Contains(item))
+                if (!CurSystem.Def.Tags.Contains(item))
                     return false;
 
             foreach (var item in ntags)
-                if (curSystem.Def.Tags.Contains(item))
+                if (CurSystem.Def.Tags.Contains(item))
                     return false;
             return true;
         }
@@ -91,14 +91,14 @@ namespace DynamicShops
             foreach (var tag in strs)
             {
                 if (tag.StartsWith("!"))
-                    nowners.Add(tag.Substring(1));
+                    nowners.AddRange(ConditionBuilder.ExpandGenericFaction(tag.Substring(1)));
                 else
-                    owners.Add(tag);
+                    owners.AddRange(ConditionBuilder.ExpandGenericFaction(tag));
             }
             return true;
         }
 
-        public override bool IfApply(StarSystem curSystem)
+        public override bool IfApply(SimGameState sim, StarSystem curSystem)
         {
             if (allways_true)
                 return true;
@@ -158,12 +158,12 @@ namespace DynamicShops
             }
             return true;
         }
-        public override bool IfApply(StarSystem curSystem)
+        public override bool IfApply(SimGameState sim, StarSystem curSystem)
         {
             if (allways_true)
                 return true;
 
-            var reputation = CustomShops.Control.State.Sim.GetReputation(curSystem.OwnerValue);
+            var reputation = sim.GetReputation(curSystem.OwnerValue);
 
             foreach (var item in equal)
                 if (reputation != item)
@@ -225,12 +225,12 @@ namespace DynamicShops
             }
             return true;
         }
-        public override bool IfApply(StarSystem curSystem)
+        public override bool IfApply(SimGameState sim, StarSystem curSystem)
         {
             if (allways_true)
                 return true;
 
-            var reputation = CustomShops.Control.State.Sim.GetReputation(FactionEnumeration.GetBlackMarketFactionValue());
+            var reputation = sim.GetReputation(FactionEnumeration.GetBlackMarketFactionValue());
 
             foreach (var item in equal)
                 if (reputation != item)
@@ -292,12 +292,12 @@ namespace DynamicShops
             }
             return true;
         }
-        public override bool IfApply(StarSystem curSystem)
+        public override bool IfApply(SimGameState sim, StarSystem curSystem)
         {
             if (allways_true)
                 return true;
 
-            var reputation = CustomShops.Control.State.Sim.GetCurrentMRBLevel();
+            var reputation = sim.GetCurrentMRBLevel();
 
             foreach (var item in equal)
                 if (reputation != item)

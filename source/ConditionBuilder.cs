@@ -1,6 +1,7 @@
 ﻿//#undef CCDEBUG
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace DynamicShops
@@ -15,15 +16,17 @@ namespace DynamicShops
             types[attr.Name] = type;
         }
 
-        internal static DCondition CreateAndInit(string name, string value)
+        internal static DCondition CreateAndInit(string name, object value)
         {
             if (types.TryGetValue(name, out Type type))
             {
                 try
                 {
                     var item = (Activator.CreateInstance(type) as DCondition);
-                    item.Init(value);
-                    return item;
+                    if(item.Init(value))
+                        return item;
+                    Control.LogError($"Error during initilization of {name}");
+                    return null;
                     
                 }
                 catch (Exception e)
@@ -38,7 +41,23 @@ namespace DynamicShops
 
         internal static List<DCondition> FromJson(object con)
         {
-            throw new NotImplementedException();
+            if (con == null)
+                return null;
+            var dict = con as Dictionary<string, object>;
+            if (dict == null)
+                return null;
+
+            var result = new List<DCondition>();
+
+            foreach (var pair in dict)
+            {
+                var condition = CreateAndInit(pair.Key, pair.Value);
+                if (condition != null)
+                    result.Add(condition);
+            }
+            
+            return result;
+
         }
 
         internal static List<string> StringsFromJson(object json)
@@ -56,6 +75,14 @@ namespace DynamicShops
                 return values;
             }
             return null;
+        }
+
+        internal static IEnumerable<string> ExpandGenericFaction(string faction)
+        {
+            var generic = Control.Settings.GenericFactions.FirstOrDefault(i => i.Name == faction);
+            if (generic == null)
+                return Enumerable.Repeat(faction, 1);
+            return generic.Members;
         }
     }
 }

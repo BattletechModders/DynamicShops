@@ -15,6 +15,8 @@ namespace DynamicShops
         {
             if (json.TryGetValue("conditions", out var con))
                 Conditions = ConditionBuilder.FromJson(con);
+            else
+                Conditions = null;
             if (json.TryGetValue("items", out var items))
             {
                 Items = ConditionBuilder.StringsFromJson(items);
@@ -39,13 +41,7 @@ namespace DynamicShops
                         return false;
                     Factions = new List<string>();
                     foreach (var faction in factions)
-                    {
-                        var generic = Control.Settings.GenericFactions.FirstOrDefault(i => i.Name == faction);
-                        if (generic != null)
-                            Factions.AddRange(generic.Members);
-                        else
-                            Factions.Add(faction);
-                    }
+                        factions.AddRange(ConditionBuilder.ExpandGenericFaction(faction));
                     return Factions.Count > 0;
                 }
             }
