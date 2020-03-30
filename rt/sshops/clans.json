@@ -3,7 +3,7 @@
 		"conditions" : 
 			{ 
 				"tag" : "planet_pop_large",
-				"owner" : "Clans",
+				"owner" : "AllClans",
 				"rep" : ">liked"
 			},
 		"items" : "RT_List_Clan_Major"
@@ -12,7 +12,7 @@
 		"conditions" : 
 			{ 
 				"tag" : "planet_pop_small",
-				"owner" : "Clans",
+				"owner" : "AllClans",
 				"rep" : ">liked"
 			},
 		"items" : "RT_List_Clan_Minor"
@@ -21,7 +21,7 @@
 		"conditions" : 
 			{ 
 				"tag" : "planet_pop_medium, planet_civ_innersphere",
-				"owner" : "Clans",
+				"owner" : "AllClans",
 				"rep" : ">liked"
 			},
 		"items" : "RT_List_Clan_Major"
@@ -30,7 +30,7 @@
 		"conditions" : 
 			{ 
 				"tag" : "planet_pop_medium, !planet_civ_innersphere",
-				"owner" : "Clans",
+				"owner" : "AllClans",
 				"rep" : ">liked"
 			},
 		"items" : "RT_List_Clan_Minor"
@@ -39,7 +39,7 @@
 		"conditions" : 
 			{ 
 				"tag" : "planet_pop_large",
-				"owner" : "Clans",
+				"owner" : "AllClans",
 				"rep" : ">FRIENDLY"
 			},
 		"items" : "RT_List_Clan_Major"
@@ -48,7 +48,7 @@
 		"conditions" : 
 			{ 
 				"tag" : "planet_pop_large",
-				"owner" : "Clans",
+				"owner" : "AllClans",
 				"rep" : "HONORED"
 			},
 		"items" : "RT_List_Clan_Major"

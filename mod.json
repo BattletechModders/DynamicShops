@@ -3,7 +3,7 @@
 	"Author": "Denadan",
 	"Website": "https://github.com/Denadan/DynamicShops",
 
-	"Enabled": enabled,
+	"Enabled": true,
 	"DependsOn": ["CustomShops"],
 	"DLL": "DynamicShops.dll",
 	"DLLEntryPoint": "DynamicShops.Control.Init",
@@ -18,19 +18,59 @@
 		
 		"FactionShopOnEveryPlanet" : true,
 		
-		"BlackMarketSystemTag" : "planet_other_blackmarket",
-
-		"SystemShops" : {
-			"Untagged" : [	
-				"ItemCollection_TestMech"
-			]
-		}
+		"GenericFactions" : [
+			{
+				"Name" : "GreatHouses",
+				"Members" : [
+					"Davion",
+					"Kurita",
+					"Liao",
+					"Marik",
+					"Stainer",
+					"ComStar"
+				]
+			},
+			{
+				"Name" : "AllClans",
+				"Members" : [
+					"Burrock",
+					"Wolf",
+					"Cloud Cobra",
+					"Coyote",
+					"Diamond Shark",
+					"Fire Mandrill",
+					"Ghost Bear",
+					"Goliath Scorpion",
+					"Hell's Horses",
+					"Ice Hellion",
+					"Jade Falcon",
+					"Nova Cat",
+					"Smoke Jaguar",
+					"Snow Raven",
+					"Star Adder",
+					"Steel Viper",
+					"Clans"
+				]
+			}
+		]
 	},	
 		
 	"Manifest": [ 
 		{
 			"Type": "ItemCollectionDef",
 			"Path": "data" 			
+		},
+		{
+			"Type": "DShopDef",
+			"Path": "sshops" 			
+		},
+		{
+			"Type": "DFactionShopDef",
+			"Path": "fshops" 			
+		},
+		{
+			"Type": "DBMShopDef",
+			"Path": "bmshops" 			
 		}
 	]
 }
