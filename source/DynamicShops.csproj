@@ -83,9 +83,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConditionBuilder.cs" />
+    <Compile Include="Conditions\ConditionBuilder.cs" />
+    <Compile Include="Conditions\DMRBCondition.cs" />
+    <Compile Include="Conditions\DOwnerCondition.cs" />
+    <Compile Include="Conditions\DPirateReputattionCondition.cs" />
+    <Compile Include="Conditions\DReputattionCondition.cs" />
+    <Compile Include="Conditions\DTagCondition.cs" />
     <Compile Include="Control.cs" />
-    <Compile Include="DCondition.cs" />
+    <Compile Include="Conditions\DCondition.cs" />
     <Compile Include="DShopDef.cs" />
     <Compile Include="DynamicShopSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
