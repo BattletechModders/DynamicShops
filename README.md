@@ -24,11 +24,17 @@ DynamicShops replace this list based on System tag/owner/reputation/mrb rating
 ## Basic Settings(mod.json) with default values
 
 `"DEBUG_ShowLoad" : true` - show loading process of shopdefs
+
 `"ReplaceSystemShop" : true` - use DynamicShops for system shops
+
 `"ReplaceFactionShop" : true` - use DynamicShops for faction shops
+
 `"ReplaceBlackMarket" : true` - use DynamicShops for black market shops
+
 `"OverrideFactionShopOwner" : true` - change faction shop owner(if present) to system owner
+
 `"FactionShopOnEveryPlanet" : true` - make faction shop avaliable on every planet of faction(require OverrideFactionShopOwner : true)
+
 `"GenericFactions" : [ ]` - faction groups
 
 ## Generic Faction lists
@@ -121,9 +127,13 @@ in prebuild conditions value - simple string with coma separated values. Dynamic
 Current implemented conditions:
 
 "tag" : "tag1,!tag2" - true if each of tag1 present and each of tag2 not present in system
+
 "owner" : "faction1,!faction2" - check if system owner is one of faction1 and none of faction2
+
 "rep" : "value1,>value2,<value3,+value4,-value5" - check if reputation to system owner is equal to value1, more then value2, less then value3,
-more or equal then value4, less or equal then value5. values are SimGameReputation(not case sensivity)
+more or equal then value4, less or equal then value5.
+
+values are SimGameReputation(not case sensivity)
 ```
 	public enum SimGameReputation
     {
@@ -138,6 +148,7 @@ more or equal then value4, less or equal then value5. values are SimGameReputati
     }
 ```
 "piraterep" : "value1,>value2,<value3,+value4,-value5" - same for pirate reputation
+
 "mrb" : "value1,>value2,<value3,+value4,-value5" - same for mrb rating. values is integer
 
 ## Examples
@@ -225,6 +236,7 @@ IEnumerable<object> - list of values `"mycondition" : [5, 12, 42]`
 IDictionary<string, object> - object json value `"mycondition" : { "a" : "test", "b" : 42}`
 
 2.2. IfApply - called when shop check condition. Gives SimGameState and Current Star System (you can get allmost any other info about game from SimGameState)
+
 3. Add DConditionAttribute to this class whith name used to identify condition
 ```
     [DCondition("mycondition")]
