@@ -41,10 +41,10 @@ namespace DynamicShops
             if (allways_true)
                 return true;
 
-            if (!owners.Contains(curSystem.OwnerValue.FactionDef.ShortName))
+            if (!owners.Contains(curSystem.OwnerValue.Name))
                 return false;
 
-            if (nowners.Contains(curSystem.OwnerValue.FactionDef.ShortName))
+            if (nowners.Contains(curSystem.OwnerValue.Name))
                 return false;
 
             return true;

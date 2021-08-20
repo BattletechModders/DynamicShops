@@ -44,8 +44,8 @@ namespace DynamicShops.Shops
                 Tags = new List<string>();
                 return;
             }
-            var name = RelatedFaction.FactionDef.ShortName;
-            
+            var name = RelatedFaction.Name;
+
             List<string> tags = new List<string>();
             foreach (var shop_def in Control.FactionShopDefs)
             {
