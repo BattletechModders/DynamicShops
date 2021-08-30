@@ -39,6 +39,7 @@ namespace DynamicShops
 
         public override bool IfApply(SimGameState sim, StarSystem CurSystem)
         {
+
             if (allways_true)
                 return true;
 

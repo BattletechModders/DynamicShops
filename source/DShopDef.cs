@@ -28,13 +28,10 @@ namespace DynamicShops
     public class DFactionShopDef : DShopDef
     {
         public List<string> Factions;
-        
+
         public override bool FromJson(Dictionary<string, object> json)
         {
-#if CCDEBUG
-            if (Control.Settings.DEBUG_ShowLoad)
-                Control.LogDebug("---- load faction");
-#endif
+            Control.LogDebug(DInfo.Loading, "---- load faction");
             if (base.FromJson(json))
             {
 
@@ -43,37 +40,46 @@ namespace DynamicShops
                     var factions = ConditionBuilder.StringsFromJson(items);
                     if (factions == null || factions.Count == 0)
                     {
-#if CCDEBUG
-                        if (Control.Settings.DEBUG_ShowLoad)
-                            Control.LogDebug("----- factions list empty");
-#endif
+                        Control.LogDebug(DInfo.Loading, "----- factions list empty");
                         return false;
                     }
                     Factions = new List<string>();
-                    foreach (var faction in factions)
+                    foreach (var faction in factions.Select(i => i.ToLower()))
                         Factions.AddRange(ConditionBuilder.ExpandGenericFaction(faction));
 #if CCDEBUG
-                    if (Control.Settings.DEBUG_ShowLoad)
+                    if (Control.Settings.DebugInfo.HasFlag(DInfo.Loading))
                     {
                         string list = "";
                         foreach (var f in Factions)
                             list += f + ";";
-                        Control.LogDebug("----- Loaded: " + list);
-                    }   
+                        Control.LogDebug(DInfo.Loading, "----- Loaded: " + list);
+                    }
 #endif
                     return Factions.Count > 0;
                 }
-#if CCDEBUG
-                if (Control.Settings.DEBUG_ShowLoad)
-                    Control.LogDebug("----- failed get faction");
-#endif
+                Control.LogDebug(DInfo.Loading, "----- failed get faction");
 
             }
-#if CCDEBUG
-            if (Control.Settings.DEBUG_ShowLoad)
-                Control.LogDebug("----- failed base");
-#endif
+            Control.LogDebug(DInfo.Loading, "----- failed base");
             return false;
         }
     }
+
+    public class DCustomShopDef : DShopDef
+    {
+        public string ShopName;
+
+        public override bool FromJson(Dictionary<string, object> json)
+        {
+            if (base.FromJson(json))
+            {
+                if (!json.ContainsKey("shop"))
+                    return false;
+                ShopName = json["shop"].ToString();
+            }
+
+            return false;
+        }
+    }
+
 }

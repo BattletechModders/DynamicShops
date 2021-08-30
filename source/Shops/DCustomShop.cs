@@ -1,24 +1,28 @@
-﻿using System;
+﻿using CustomShops;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using c = CustomShops.Control;
 
 namespace DynamicShops.Shops
 {
-    public class DSystemShop : CustomShops.Shops.SystemShop
+    public abstract class DCustomShop : TaggedShop
     {
-        public override string Name => "DSystem";
+        public DCustomShopDescriptor Descriptor { get; private set; }
+
+        public override bool CanUse => UseConditions == null ||
+                                       UseConditions.All(i => i.IfApply(c.State.Sim, c.State.CurrentSystem));
+        public override bool Exists => ExistsConditions == null ||
+                                       ExistsConditions.All(i => i.IfApply(c.State.Sim, c.State.CurrentSystem));
+
+        public override int SortOrder => Descriptor.SortOrder;
+        public override bool RefreshOnSystemChange => false;
+        public override bool RefreshOnMonthChange => false;
+        public override bool RefreshOnOwnerChange => false;
 
         protected override void UpdateTags()
         {
             List<string> tags = new List<string>();
-            if (!string.IsNullOrWhiteSpace(Control.Settings.EmptyPlanetTag))
-                if (CustomShops.Control.State.CurrentSystem.Def.Tags.Contains(Control.Settings.EmptyPlanetTag))
-                {
-                    Tags = tags;
-                    return;
-                }
+
 
             foreach (var shop_def in Control.ShopDefs)
             {
@@ -50,5 +54,17 @@ namespace DynamicShops.Shops
             }
             Tags = tags;
         }
+
+        public override string Name => Descriptor.Name;
+        public override string TabText => Descriptor.TabText;
+
+        public List<DCondition> UseConditions => Descriptor.UseConditions;
+        public List<DCondition> ExistsConditions => Descriptor.ExistConditions;
+
+        public DCustomShop(DCustomShopDescriptor decriptor)
+        {
+            Descriptor = decriptor;
+        }
     }
+
 }

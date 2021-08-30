@@ -15,7 +15,7 @@ namespace DynamicShops.Shops
             get
             {
                 if (Control.Settings.FactionShopOnEveryPlanet)
-                    return RelatedFaction != null && RelatedFaction.FactionDef.ShortName != "the Locals";
+                    return RelatedFaction != null && RelatedFaction.FactionDef.ShortName != "the Locals" && !RelatedFaction.IsInvalidUnset;
                 else
                     return base.Exists;
             }
@@ -44,13 +44,23 @@ namespace DynamicShops.Shops
                 Tags = new List<string>();
                 return;
             }
-            var name = RelatedFaction.FactionDef.ShortName;
+            var name = RelatedFaction.FactionDef.ShortName.ToLower();
             
             List<string> tags = new List<string>();
             foreach (var shop_def in Control.FactionShopDefs)
             {
-                if (shop_def.Factions == null || !shop_def.Factions.Contains(name))
+                Control.LogDebug(DInfo.Conditions, $"Start to check conditions:");
+
+                if (shop_def.Factions == null || shop_def.Factions.Count == 0) 
+                {
+                    Control.LogDebug(DInfo.Conditions, $"- empty faction list, failed");
                     continue;
+                }
+                if (!shop_def.Factions.Contains(name))
+                {
+                    Control.LogDebug(DInfo.Conditions, $"- failed faction check for {name} in [{DebugTools.ShowList("", shop_def.Factions)}]");
+                    continue;
+                }
 
                 var use = true;
                 if (shop_def.Conditions != null)
@@ -65,7 +75,10 @@ namespace DynamicShops.Shops
                     }
                 }
                 if (use)
+                {
+                    Control.LogDebug(DInfo.Conditions, DebugTools.ShowList("- passed", shop_def.Items));
                     tags.AddRange(shop_def.Items);
+                }
             }
             Tags = tags;
         }

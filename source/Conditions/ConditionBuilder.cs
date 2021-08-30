@@ -79,10 +79,10 @@ namespace DynamicShops
 
         internal static IEnumerable<string> ExpandGenericFaction(string faction)
         {
-            var generic = Control.Settings.GenericFactions.FirstOrDefault(i => i.Name == faction);
+            var generic = Control.Settings.GenericFactions.FirstOrDefault(i => i.Name.ToLower() == faction);
             if (generic == null)
-                return Enumerable.Repeat(faction, 1);
-            return generic.Members;
+                return Enumerable.Repeat(faction ,1);
+            return generic.Members.Select(i => i.ToLower());
         }
     }
 }

@@ -16,9 +16,22 @@ namespace DynamicShops
         public string[] Members;
     }
 
+    public enum DInfo {
+        None = 0,
+        Main = 1,
+        Loading = 1 << 1,
+        Conditions = 1 << 2,
+        FactionLoad = 1 << 3,
+        RepLoad = 1 << 4,
+
+        All = 0xffff,
+    }
+
     public class DynamicShopSettings
     {
         public LogLevel LogLevel = LogLevel.Debug;
+        public DInfo DebugInfo = DInfo.Main | DInfo.Loading;
+        
         public bool DEBUG_ShowLoad = true;
 
         public bool ReplaceSystemShop = true;
@@ -29,7 +42,7 @@ namespace DynamicShops
         public bool OverrideFactionShopOwner = true;
 
         public string BlackMarketSystemTag = "planet_other_blackmarket";
-        
+        public string EmptyPlanetTag = "planet_other_empty";
   
         public FactionList[] GenericFactions;
     }

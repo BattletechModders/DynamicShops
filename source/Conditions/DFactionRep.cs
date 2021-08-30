@@ -1,14 +1,17 @@
-﻿using BattleTech;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using fastJSON;
+using BattleTech;
 
 namespace DynamicShops
 {
-    [DCondition("rep")]
-    public class DReputattionCondition : DCondition
+    [DCondition("factionrep")]
+    public class DFactionRep : DCondition
     {
+        private string Faction;
+
+        private FactionValue faction;
+
         private List<SimGameReputation> less;
         private List<SimGameReputation> equal;
         private List<SimGameReputation> more;
@@ -16,7 +19,7 @@ namespace DynamicShops
         private List<SimGameReputation> eless;
 
 
-        private bool always_true = false;
+        private bool allways_true = false;
 
         public override bool Init(object json)
         {
@@ -26,15 +29,21 @@ namespace DynamicShops
                     list.Add(res);
             }
 
-            if (!(json is string str))
+            if (json == null || !(json is IDictionary<string, object> dictionary))
                 return false;
+
+            if (!dictionary.ContainsKey("faction") || !dictionary.ContainsKey("rep"))
+                return false;
+
+            var str = dictionary["rep"].ToString();
+            Faction = dictionary["Faction"].ToString().ToLower();
 
             if (string.IsNullOrEmpty(str))
             {
-                always_true = true;
+                allways_true = true;
                 return false;
             }
-            always_true = false;
+            allways_true = false;
             var strs = str.ToUpper().Split(',');
 
 
@@ -65,23 +74,32 @@ namespace DynamicShops
             if (emore.Count > 0) Control.LogDebug(DInfo.RepLoad, "- +:" + emore.Aggregate("", (total, next) => total += next.ToString() + ";"));
             if (eless.Count > 0) Control.LogDebug(DInfo.RepLoad, "- -:" + eless.Aggregate("", (total, next) => total += next.ToString() + ";"));
             if (equal.Count > 0) Control.LogDebug(DInfo.RepLoad, "- =:" + equal.Aggregate("", (total, next) => total += next.ToString() + ";"));
-            
+
 
             return true;
         }
         public override bool IfApply(SimGameState sim, StarSystem curSystem)
         {
-            FactionValue check_faction = curSystem.OwnerValue;
 
+            if (faction == null)
+            {
+                faction = FactionEnumeration.FactionList.FirstOrDefault(
+                    i => i.FactionDef.ShortName.ToLower() == Faction);
 
-            check_faction = curSystem.OwnerValue;
-            if (check_faction.IsInvalidUnset)
+                if (faction == null)
+                    faction = FactionEnumeration.GetInvalidUnsetFactionValue();
+            }
+
+            if (faction.IsInvalidUnset)
+            {
+                Control.LogDebug(DInfo.Conditions, $"- Reputation check for {faction.FactionDef.ShortName.ToLower()} failed - invalid faction {Faction}");
                 return false;
-            
-            var reputation = sim.GetReputation(check_faction);
-            Control.LogDebug(DInfo.Conditions, $"- Reputation check for {check_faction.FactionDef.ShortName.ToLower()}(owner)  rep:{reputation}");
+            }
 
-            if (always_true)
+            var reputation = sim.GetReputation(faction);
+            Control.LogDebug(DInfo.Conditions, $"- Reputation check for {faction.FactionDef.ShortName.ToLower()}  rep:{reputation}");
+
+            if (allways_true)
             {
                 Control.LogDebug(DInfo.Conditions, $"-- empty rep lists, passed");
                 return true;
