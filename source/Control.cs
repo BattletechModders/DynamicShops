@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using BattleTech;
 using System.Linq;
+using DynamicShops.Shops;
 
 namespace DynamicShops
 {
@@ -20,6 +21,9 @@ namespace DynamicShops
         private const string ModName = "DynamicShops";
         private const string LogPrefix = "[DShops]";
 
+
+        private static 
+        internal static Dictionary<string, List<DCustomShopDef>> CustomShopDefs;
         internal static List<DShopDef> ShopDefs { get; private set; }
         internal static List<DFactionShopDef> FactionShopDefs { get; private set; }
         internal static List<DShopDef> BlackMarketShopDefs { get; private set; }
@@ -55,17 +59,17 @@ namespace DynamicShops
                 RegisterConditions(Assembly.GetExecutingAssembly());
 
                 if (Settings.ReplaceSystemShop)
-                    CustomShops.Control.RegisterShop(new Shops.DSystemShop());
+                    CustomShops.Control.RegisterShop(new Shops.DSystemShop(), new List<string>() { "systemchange", "monthend" });
                 if (Settings.ReplaceFactionShop)
-                    CustomShops.Control.RegisterShop(new Shops.DFactionShop());
+                    CustomShops.Control.RegisterShop(new Shops.DFactionShop(), new List<string>() { "systemchange", "monthend" });
                 if (Settings.ReplaceBlackMarket)
-                    CustomShops.Control.RegisterShop(new Shops.DBlackMarket());
+                    CustomShops.Control.RegisterShop(new Shops.DBlackMarket(), new List<string>() { "systemchange", "monthend" });
 
                 ShopDefs = new List<DShopDef>();
                 FactionShopDefs = new List<DFactionShopDef>();
                 BlackMarketShopDefs = new List<DShopDef>();
 
-                Logger.Log("Loaded DinamicShops v0.5 for bt 1.9.1");
+                Logger.Log("Loaded DynamicShops v0.6 for bt 1.9.1");
 #if CCDEBUG
                 Logger.LogDebug("done");
 #endif
@@ -84,65 +88,65 @@ namespace DynamicShops
                 if (attr == null)
                     continue;
 
-                Control.LogDebug($"Found condition {type} with name {attr.Name}");
+                LogDebug(DInfo.Main, $"Found condition {type} with name {attr.Name}");
 
                 if (typeof(DCondition).IsAssignableFrom(type))
                     ConditionBuilder.Register(type, attr);
                 else
-                    Control.LogError($"{type} not DCondition, skipped");
+                    LogError($"{type} not DCondition, skipped");
             }
         }
 
         public static void FinishedLoading(Dictionary<string, Dictionary<string, VersionManifestEntry>> customResources)
         {
-            Control.Log("Finish Loading");
+            Log("Finish Loading");
             Dictionary<string, VersionManifestEntry> manifest = null;
             if (customResources.TryGetValue("DShopDef", out manifest))
             {
-                Control.LogDebug("- Loading DShopDef");
+                LogDebug(DInfo.Loading, "- Loading DShopDef");
                 LoadShopDefs(manifest, ShopDefs);
             }
             if (customResources.TryGetValue("DFactionShopDef", out manifest))
             {
-                Control.LogDebug("- Loading DFactionShopDef");
+                LogDebug(DInfo.Loading, "- Loading DFactionShopDef");
                 LoadShopDefs(manifest, FactionShopDefs);
             }
             if (customResources.TryGetValue("DBMShopDef", out manifest))
             {
-                Control.LogDebug("- Loading DBMShopDef");
+                LogDebug(DInfo.Loading, "- Loading DBMShopDef");
                 LoadShopDefs(manifest, BlackMarketShopDefs);
             }
-
-            Control.Log("Loaded");
-            Control.Log("- System shops: " + ShopDefs.Count.ToString());
-            Control.Log("- Faction shops: " + FactionShopDefs.Count.ToString());
-            Control.Log("- Black market shops: " + BlackMarketShopDefs.Count.ToString());
-        }
-
-        private static void LoadShopDefs<ShopType>(Dictionary<string, VersionManifestEntry> manifest, List<ShopType> shopDefs)
-            where ShopType : DShopDef, new()
-        {
-            void load_shop(Object obj)
+            if (customResources.TryGetValue("DCustomShopDef", out manifest))
             {
-                var dict = obj as Dictionary<string, object>;
-                if (dict == null)
-                {
-                    Control.LogDebug("---- cannot get dictionary - skipped");
-                    return;
-                }
-                ShopType shop = new ShopType();
-                if (shop.FromJson(dict))
-                {
-                    shopDefs.Add(shop);
-                }
+                LogDebug(DInfo.Loading, "- Loading DBMShopDef");
+                List<DCustomShopDef> custom_shop_defs;
+                LoadShopDefs(manifest, custom_shop_defs);
+                if(custom_shop_defs != null)
+                    CustomShopDefs = custom_shop_defs
+                        .GroupBy(i => i.ShopName)
+                        .ToDictionary(i => i.Key,
+                            i=>i.ToList());
                 else
-                    Control.LogDebug("---- bad shopdef - skipped");
+                    CustomShopDefs = new Dictionary<string, List<DCustomShopDef>>();
+            }
+            if (customResources.TryGetValue("DCustomShopDescriptor", out manifest))
+            {
+                LogDebug(DInfo.Loading, "- Loading DBMShopDef");
+                LoadCustomShops(manifest);
 
             }
 
+            Log("Loaded");
+            Log("- System shops: " + ShopDefs.Count.ToString());
+            Log("- Faction shops: " + FactionShopDefs.Count.ToString());
+            Log("- Black market shops: " + BlackMarketShopDefs.Count.ToString());
+        }
+
+        private static void LoadCustomShops(Dictionary<string, VersionManifestEntry> manifest)
+        {
             foreach (var item in manifest.Values)
             {
-                Control.LogDebug("-- Loading " + item.FilePath);
+                LogDebug(DInfo.Loading, "-- Loading " + item.FilePath);
                 string json = "";
 
                 using (var reader = new StreamReader(item.FilePath))
@@ -154,23 +158,89 @@ namespace DynamicShops
                     var obj = fastJSON.JSON.ToObject(json, true);
                     if (obj is Dictionary<string, object> dict)
                     {
-                        Control.LogDebug("--- single item");
+                        DCustomShopDescriptor descriptor = DCustomShopDescriptor.FromJson(obj);
+                        if (descriptor != null)
+                        {
+                            DCustomShop shop = null;
+
+                            switch (descriptor.Type)
+                            {
+                                case ShopSubType.FactionBased:
+                                    break;
+                                case ShopSubType.Custom:
+                                    break;
+                            }
+
+                            if(shop == null)
+                                continue;
+
+                            CustomShops.Control.RegisterShop(shop, descriptor.RefreshEvents);
+                        }
+                    }
+                    else
+                    {
+                        LogError($"Missformed json {item.FilePath}");
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogError($"Error reading {item.FilePath}", e);
+                }
+            }
+        }
+
+        private static void LoadShopDefs<ShopType>(Dictionary<string, VersionManifestEntry> manifest, List<ShopType> shopDefs)
+            where ShopType : DShopDef, new()
+        {
+            void load_shop(Object obj)
+            {
+                var dict = obj as Dictionary<string, object>;
+                if (dict == null)
+                {
+                    LogDebug(DInfo.Loading, "---- cannot get dictionary - skipped");
+                    return;
+                }
+                ShopType shop = new ShopType();
+                if (shop.FromJson(dict))
+                {
+                    shopDefs.Add(shop);
+                }
+                else
+                    LogDebug(DInfo.Loading, "---- bad shopdef - skipped");
+
+            }
+
+            foreach (var item in manifest.Values)
+            {
+                LogDebug(DInfo.Loading, "-- Loading " + item.FilePath);
+                string json = "";
+
+                using (var reader = new StreamReader(item.FilePath))
+                {
+                    json = reader.ReadToEnd();
+                }
+                try
+                {
+                    var obj = fastJSON.JSON.ToObject(json, true);
+                    if (obj is Dictionary<string, object> dict)
+                    {
+                        LogDebug(DInfo.Loading, "--- single item");
                         load_shop(obj);
                     }
                     else if (obj is IEnumerable<object> list)
                     {
-                        Control.LogDebug($"--- list of {list.Count()} items");
+                        LogDebug(DInfo.Loading, $"--- list of {list.Count()} items");
                         foreach (var sub in list)
                             load_shop(sub);
                     }
                     else
                     {
-                        Control.LogError($"Missformed json {item.FilePath}");
+                        LogError($"Missformed json {item.FilePath}");
                     }
                 }
                 catch (Exception e)
                 {
-                    Control.LogError($"Error reading {item.FilePath}", e);
+                    LogError($"Error reading {item.FilePath}", e);
                 }
             }
         }
@@ -178,14 +248,16 @@ namespace DynamicShops
 
         #region LOGGING
         [Conditional("CCDEBUG")]
-        public static void LogDebug(string message)
+        public static void LogDebug(DInfo level, string message)
         {
+            if(Settings.DebugInfo.HasFlag(level))
             Logger.LogDebug(LogPrefix + message);
         }
         [Conditional("CCDEBUG")]
-        public static void LogDebug(string message, Exception e)
+        public static void LogDebug(DInfo level, string message, Exception e)
         {
-            Logger.LogDebug(LogPrefix + message, e);
+            if (Settings.DebugInfo.HasFlag(level))
+                Logger.LogDebug(LogPrefix + message, e);
         }
 
         public static void LogError(string message)

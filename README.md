@@ -113,7 +113,8 @@ example of list from general.json
 Full syntax
 ```
 {
-	"factions" : list of single faction, used for factions shop only, ignored in system and bm shops
+	"shop" : "name" - name of custom dynamic shop, ignored in bm/system/faction shops
+	"factions" : [] - list or single faction, used for factions shop only, ignored in system and bm shops
 	"conditions " : { } list of condition to check, if empty or skipped - always true
 	"items" : list of single itemcollection to add when conditions met
 }
@@ -149,7 +150,21 @@ values are SimGameReputation(not case sensivity)
 ```
 "piraterep" : "value1,>value2,<value3,+value4,-value5" - same for pirate reputation
 
+"factionrep" " { "faction" : "shortname", "rep" : "value1,>value2,<value3,+value4,-value5" } same for any other faction
+
 "mrb" : "value1,>value2,<value3,+value4,-value5" - same for mrb rating. values is integer
+
+### Simple Boolean conditions
+
+Basic list of condition act as boolean AND - it return true if all of it members return true
+
+"true" : {} - value ignored, allways return true
+
+"false" : {} - value ignored allways return false
+
+"not" : { list of condtions } - return NOT(conditions) if list empty - return false;
+
+"or" : { list of conditions } - return  true if any of conditins is true;
 
 ## Examples
 ```

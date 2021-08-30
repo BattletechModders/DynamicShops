@@ -264,3 +264,5 @@ paket-files/
 __pycache__/
 *.pyc
 /readme_images
+/111.txt
+/modstate.json
