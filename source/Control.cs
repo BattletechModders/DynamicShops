@@ -21,8 +21,6 @@ namespace DynamicShops
         private const string ModName = "DynamicShops";
         private const string LogPrefix = "[DShops]";
 
-
-        private static 
         internal static Dictionary<string, List<DCustomShopDef>> CustomShopDefs;
         internal static List<DShopDef> ShopDefs { get; private set; }
         internal static List<DFactionShopDef> FactionShopDefs { get; private set; }
@@ -119,7 +117,7 @@ namespace DynamicShops
             if (customResources.TryGetValue("DCustomShopDef", out manifest))
             {
                 LogDebug(DInfo.Loading, "- Loading DBMShopDef");
-                List<DCustomShopDef> custom_shop_defs;
+                List<DCustomShopDef> custom_shop_defs = new();
                 LoadShopDefs(manifest, custom_shop_defs);
                 if(custom_shop_defs != null)
                     CustomShopDefs = custom_shop_defs
