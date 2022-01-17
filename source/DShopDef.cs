@@ -76,6 +76,7 @@ namespace DynamicShops
                 if (!json.ContainsKey("shop"))
                     return false;
                 ShopName = json["shop"].ToString();
+                return true;
             }
 
             return false;

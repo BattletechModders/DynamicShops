@@ -116,20 +116,21 @@ namespace DynamicShops
             }
             if (customResources.TryGetValue("DCustomShopDef", out manifest))
             {
-                LogDebug(DInfo.Loading, "- Loading DBMShopDef");
+                LogDebug(DInfo.Loading, "- Loading DCustomShopDef");
                 List<DCustomShopDef> custom_shop_defs = new();
                 LoadShopDefs(manifest, custom_shop_defs);
-                if(custom_shop_defs != null)
+                if (custom_shop_defs != null)
                     CustomShopDefs = custom_shop_defs
                         .GroupBy(i => i.ShopName)
                         .ToDictionary(i => i.Key,
-                            i=>i.ToList());
+                            i => i.ToList());
                 else
                     CustomShopDefs = new Dictionary<string, List<DCustomShopDef>>();
             }
+
             if (customResources.TryGetValue("DCustomShopDescriptor", out manifest))
             {
-                LogDebug(DInfo.Loading, "- Loading DBMShopDef");
+                LogDebug(DInfo.Loading, "- Loading DCustomShopDescriptor");
                 LoadCustomShops(manifest);
 
             }
@@ -138,6 +139,7 @@ namespace DynamicShops
             Log("- System shops: " + ShopDefs.Count.ToString());
             Log("- Faction shops: " + FactionShopDefs.Count.ToString());
             Log("- Black market shops: " + BlackMarketShopDefs.Count.ToString());
+            Log($"- Custom Shops : {CustomShopDefs.Count}");
         }
 
         private static void LoadCustomShops(Dictionary<string, VersionManifestEntry> manifest)
@@ -156,20 +158,12 @@ namespace DynamicShops
                     var obj = fastJSON.JSON.ToObject(json, true);
                     if (obj is Dictionary<string, object> dict)
                     {
-                        DCustomShopDescriptor descriptor = DCustomShopDescriptor.FromJson(obj);
+                        DCustomShopDescriptor descriptor = DCustomShopDescriptor.FromJson(dict);
                         if (descriptor != null)
                         {
-                            DCustomShop shop = null;
+                            DCustomShop shop = new(descriptor);
 
-                            switch (descriptor.Type)
-                            {
-                                case ShopSubType.FactionBased:
-                                    break;
-                                case ShopSubType.Custom:
-                                    break;
-                            }
-
-                            if(shop == null)
+                            if (shop == null)
                                 continue;
 
                             CustomShops.Control.RegisterShop(shop, descriptor.RefreshEvents);
@@ -248,8 +242,8 @@ namespace DynamicShops
         [Conditional("CCDEBUG")]
         public static void LogDebug(DInfo level, string message)
         {
-            if(Settings.DebugInfo.HasFlag(level))
-            Logger.LogDebug(LogPrefix + message);
+            if (Settings.DebugInfo.HasFlag(level))
+                Logger.LogDebug(LogPrefix + message);
         }
         [Conditional("CCDEBUG")]
         public static void LogDebug(DInfo level, string message, Exception e)
