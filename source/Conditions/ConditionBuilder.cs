@@ -25,7 +25,7 @@ namespace DynamicShops
                     var item = (Activator.CreateInstance(type) as DCondition);
                     if(item.Init(value))
                         return item;
-                    Control.LogError($"Error during initilization of {name}");
+                    Control.LogError($"Error during initialization of {name}");
                     return null;
                     
                 }

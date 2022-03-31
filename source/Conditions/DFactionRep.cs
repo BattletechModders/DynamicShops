@@ -83,11 +83,7 @@ namespace DynamicShops
 
             if (faction == null)
             {
-                faction = FactionEnumeration.FactionList.FirstOrDefault(
-                    i => i.FactionDef.ShortName.ToLower() == Faction);
-
-                if (faction == null)
-                    faction = FactionEnumeration.GetInvalidUnsetFactionValue();
+                faction = FactionEnumeration.GetFactionByName(Faction);
             }
 
             if (faction.IsInvalidUnset)
