@@ -36,7 +36,7 @@ namespace DynamicShops
                 return false;
 
             var str = dictionary["rep"].ToString();
-            Faction = dictionary["Faction"].ToString().ToLower();
+            Faction = dictionary["faction"].ToString();
 
             if (string.IsNullOrEmpty(str))
             {

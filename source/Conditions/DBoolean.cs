@@ -41,7 +41,7 @@ namespace DynamicShops
         public override bool Init(object json)
         {
             conditions = ConditionBuilder.FromJson(json);
-            return conditions == null;
+            return conditions != null;
         }
 
         public override bool IfApply(SimGameState sim, StarSystem CurSystem)
@@ -61,7 +61,7 @@ namespace DynamicShops
         public override bool Init(object json)
         {
             conditions = ConditionBuilder.FromJson(json);
-            return conditions == null;
+            return conditions != null;
         }
 
         public override bool IfApply(SimGameState sim, StarSystem CurSystem)
