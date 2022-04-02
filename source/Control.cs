@@ -114,6 +114,13 @@ namespace DynamicShops
                 LogDebug(DInfo.Loading, "- Loading DBMShopDef");
                 LoadShopDefs(manifest, BlackMarketShopDefs);
             }
+
+            if (customResources.TryGetValue("DCustomShopDescriptor", out manifest))
+            {
+                LogDebug(DInfo.Loading, "- Loading DCustomShopDescriptor");
+                LoadCustomShops(manifest);
+            }
+
             if (customResources.TryGetValue("DCustomShopDef", out manifest))
             {
                 LogDebug(DInfo.Loading, "- Loading DCustomShopDef");
@@ -126,20 +133,13 @@ namespace DynamicShops
                             i => i.ToList());
                 else
                     CustomShopDefs = new Dictionary<string, List<DCustomShopDef>>();
-            }
-
-            if (customResources.TryGetValue("DCustomShopDescriptor", out manifest))
-            {
-                LogDebug(DInfo.Loading, "- Loading DCustomShopDescriptor");
-                LoadCustomShops(manifest);
-
-            }
+            }            
 
             Log("Loaded");
             Log("- System shops: " + ShopDefs.Count.ToString());
             Log("- Faction shops: " + FactionShopDefs.Count.ToString());
             Log("- Black market shops: " + BlackMarketShopDefs.Count.ToString());
-            Log($"- Custom Shops : {CustomShopDefs.Count}");
+            Log($"- Custom Shops Types: {CustomShopDefs.Count}, Implementations : {CustomShopDefs.Values.Sum(item => item.Count())}");
         }
 
         private static void LoadCustomShops(Dictionary<string, VersionManifestEntry> manifest)
