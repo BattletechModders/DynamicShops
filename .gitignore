@@ -266,3 +266,6 @@ __pycache__/
 /readme_images
 /111.txt
 /modstate.json
+
+# Ignore the VS Directory.build.props file
+Directory.Build.props 

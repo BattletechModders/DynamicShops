@@ -79,7 +79,7 @@ namespace DynamicShops
                 Logger.LogError(e);
             }
         }
-        private static void RegisterConditions(Assembly assembly)
+        public static void RegisterConditions(Assembly assembly)
         {
             foreach (var type in assembly.GetTypes())
             {

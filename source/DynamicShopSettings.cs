@@ -23,7 +23,7 @@ namespace DynamicShops
         Conditions = 1 << 2,
         FactionLoad = 1 << 3,
         RepLoad = 1 << 4,
-
+        DateLoad = 1 << 5,
         All = 0xffff,
     }
 
