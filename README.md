@@ -127,6 +127,8 @@ in prebuild conditions value - simple string with coma separated values. Dynamic
 
 Current implemented conditions:
 
+"careerLengthCondition": "30, !200" - true if career length is longer than 30 days, and less than 200 days 
+
 "dateCondition": "3062-03-28T00:00:00Z, !3062-05-28T00:00:00Z" - true if current simgame date is *after* 3062-03-28 and *before* 3062-05-28
 
 "tag" : "tag1,!tag2" - true if each of tag1 present and each of tag2 not present in system
