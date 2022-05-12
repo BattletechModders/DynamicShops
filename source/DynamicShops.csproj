@@ -43,9 +43,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="CustomShops">
-      <HintPath>..\..\CustomShops\CustomShops.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <Private>False</Private>
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\BATTLETECH\Mods\CustomShops\CustomShops.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -82,6 +80,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Conditions\DDateCondition.cs" />
     <Compile Include="Conditions\ConditionBuilder.cs" />
     <Compile Include="Conditions\DFactionRep.cs" />
     <Compile Include="Conditions\DMRBCondition.cs" />

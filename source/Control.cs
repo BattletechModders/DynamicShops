@@ -21,6 +21,8 @@ namespace DynamicShops
         private const string ModName = "DynamicShops";
         private const string LogPrefix = "[DShops]";
 
+
+        internal static List<DCustomShopDef> custom_shop_defs;
         internal static Dictionary<string, List<DCustomShopDef>> CustomShopDefs;
         internal static List<DShopDef> ShopDefs { get; private set; }
         internal static List<DFactionShopDef> FactionShopDefs { get; private set; }
@@ -133,8 +135,8 @@ namespace DynamicShops
                             i => i.ToList());
                 else
                     CustomShopDefs = new Dictionary<string, List<DCustomShopDef>>();
-            }            
-
+            }
+            
             Log("Loaded");
             Log("- System shops: " + ShopDefs.Count.ToString());
             Log("- Faction shops: " + FactionShopDefs.Count.ToString());
