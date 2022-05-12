@@ -9,8 +9,8 @@ namespace DynamicShops
     public class DateCondition : DCondition
     {
         public bool Autopass = false;
-        public DateTime NotBefore;
-        public DateTime NotAfter;
+        public DateTime NotBefore = new(2500, 1, 1);
+        public DateTime NotAfter = new(3200, 1, 1);
         public override bool Init(object json)
         {
             if (json == null)

@@ -21,8 +21,6 @@ namespace DynamicShops
         private const string ModName = "DynamicShops";
         private const string LogPrefix = "[DShops]";
 
-
-        internal static List<DCustomShopDef> custom_shop_defs;
         internal static Dictionary<string, List<DCustomShopDef>> CustomShopDefs;
         internal static List<DShopDef> ShopDefs { get; private set; }
         internal static List<DFactionShopDef> FactionShopDefs { get; private set; }
