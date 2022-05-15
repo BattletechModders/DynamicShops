@@ -9,8 +9,8 @@ namespace DynamicShops
     public class CareerLengthCondition : DCondition
     {
         public bool Autopass = false;
-        public int MinLength;
-        public int MaxLength;
+        public int MinLength = int.MinValue;
+        public int MaxLength = int.MaxValue;
         public override bool Init(object json)
         {
             if (json == null)
@@ -32,11 +32,11 @@ namespace DynamicShops
                 var trTime = cond.Trim();
                 if (trTime.StartsWith("!"))
                 {
-                    MinLength = int.Parse(trTime.Substring(1));
+                    MaxLength = int.Parse(trTime.Substring(1));
                 }
                 else
                 {
-                    MaxLength = int.Parse(trTime);
+                    MinLength = int.Parse(trTime);
                 }
             }
             Control.LogDebug(DInfo.CLengthLoad, "careerLengthCondition loaded:");
@@ -55,13 +55,13 @@ namespace DynamicShops
                 return true;
             }
 
-            if (sim.DaysPassed < MinLength)
+            if (MinLength != int.MinValue && sim.DaysPassed < MinLength)
             {
                 Control.LogDebug(DInfo.Conditions, $"-- failed: current career length {sim.DaysPassed} is less than MinLength {MinLength}");
                 return false;
             }
 
-            if (sim.DaysPassed > MaxLength)
+            if (MaxLength != int.MaxValue && sim.DaysPassed > MaxLength)
             {
                 Control.LogDebug(DInfo.Conditions, $"-- failed: current career length {sim.DaysPassed} is greater than MaxLength {MaxLength}");
 

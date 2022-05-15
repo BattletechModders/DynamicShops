@@ -81,6 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Conditions\DCareerLengthCondition.cs" />
     <Compile Include="Conditions\DDateCondition.cs" />
     <Compile Include="Conditions\ConditionBuilder.cs" />
     <Compile Include="Conditions\DFactionRep.cs" />
