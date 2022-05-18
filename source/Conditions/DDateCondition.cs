@@ -9,8 +9,8 @@ namespace DynamicShops
     public class DateCondition : DCondition
     {
         public bool Autopass = false;
-        public DateTime NotBefore = new(2500, 1, 1);
-        public DateTime NotAfter = new(3200, 1, 1);
+        public DateTime NotBefore = DateTime.MinValue;
+        public DateTime NotAfter = DateTime.MaxValue;
         public override bool Init(object json)
         {
             if (json == null)
@@ -57,13 +57,13 @@ namespace DynamicShops
             }
 
 
-            if (sim.CurrentDate < NotBefore)
+            if (NotBefore != DateTime.MaxValue && sim.CurrentDate < NotBefore)
             {
                 Control.LogDebug(DInfo.Conditions, $"-- failed: current date {sim.CurrentDate} is before NotBefore {NotBefore}");
                 return false;
             }
 
-            if (sim.CurrentDate > NotAfter)
+            if (NotAfter != DateTime.MinValue && sim.CurrentDate > NotAfter)
             {
                 Control.LogDebug(DInfo.Conditions, $"-- failed: current date {sim.CurrentDate} is after NotAfter date {NotAfter}");
 
