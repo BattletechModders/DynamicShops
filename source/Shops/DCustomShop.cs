@@ -60,7 +60,7 @@ namespace DynamicShops.Shops
                     Control.LogDebug(DInfo.Conditions, DebugTools.ShowList("passed", shop_def.Items));
                     tags.AddRange(shop_def.Items);
                 }
-            }
+            }           
             Tags = tags;
         }
 
