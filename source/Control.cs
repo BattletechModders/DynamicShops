@@ -1,11 +1,9 @@
 ﻿//#undef CCDEBUG
 
-using Harmony;
 using System;
 using System.Reflection;
 using System.Collections.Generic;
 using System.IO;
-using BattleTech.UI;
 using HBS.Logging;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -45,17 +43,13 @@ namespace DynamicShops
                     Settings = new DynamicShopSettings();
                 }
 
-
-
-                SetupLogging(directory);
 #if CCDEBUG
                 var str = JsonConvert.SerializeObject(Settings, Formatting.Indented);
                 Logger.LogDebug(str);
 
 #endif  
-                var harmony = HarmonyInstance.Create("io.github.denadan.DynamicShops");
-                harmony.PatchAll(Assembly.GetExecutingAssembly());
-
+                var HarmonyPackage = "io.github.denadan.DynamicShops";
+                Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), HarmonyPackage);
                 RegisterConditions(Assembly.GetExecutingAssembly());
 
                 if (Settings.ReplaceSystemShop)
@@ -69,7 +63,7 @@ namespace DynamicShops
                 FactionShopDefs = new List<DFactionShopDef>();
                 BlackMarketShopDefs = new List<DShopDef>();
 
-                Logger.Log("Loaded DynamicShops v0.6 for bt 1.9.1");
+                Logger.Log($"Loaded DynamicShops {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location)} for bt 1.9.1");
 #if CCDEBUG
                 Logger.LogDebug("done");
 #endif
@@ -121,10 +115,10 @@ namespace DynamicShops
                 Control.LogDebug(DInfo.Loading, "- Loading DBMShopDef");
                 LoadShopDefs(manifest, custom_shop_defs);
                 if(custom_shop_defs != null)
-                CustomShopDefs = custom_shop_defs
-                    .GroupBy(i => i.ShopName)
-                    .ToDictionary(i => i.Key,
-                        i=>i.ToList());
+                    CustomShopDefs = custom_shop_defs
+                        .GroupBy(i => i.ShopName)
+                        .ToDictionary(i => i.Key,
+                            i=>i.ToList());
                 else
                     CustomShopDefs = new Dictionary<string, List<DCustomShopDef>>();
             }
@@ -249,8 +243,8 @@ namespace DynamicShops
         [Conditional("CCDEBUG")]
         public static void LogDebug(DInfo level, string message)
         {
-            if(Settings.DebugInfo.HasFlag(level))
-            Logger.LogDebug(LogPrefix + message);
+            if (Settings.DebugInfo.HasFlag(level))
+                Logger.LogDebug(LogPrefix + message);
         }
         [Conditional("CCDEBUG")]
         public static void LogDebug(DInfo level, string message, Exception e)
