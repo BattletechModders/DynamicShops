@@ -1,115 +1,74 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="ValidateBattleTechGameDir">
+  <Target Name="ValidateBattleTechGameDir" Condition="'$(BattleTechGameDir)' == '' Or !Exists('$(BattleTechGameDir)')">
+    <Error Text="BattleTechGameDir variable not set properly" />
+  </Target>
+  <PropertyGroup Condition="'$(DynamicShopsModPath)' == '' And Exists('$(BattleTechGameDir)\Mods\Core\DynamicShops')">
+    <!-- RogueTech -->
+    <DynamicShopsModPath>$(BattleTechGameDir)\Mods\Core\DynamicShops</DynamicShopsModPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(DynamicShopsModPath)' == '' And Exists('$(BattleTechGameDir)\Mods\DynamicShops')">
+    <!-- flat dir -->
+    <DynamicShopsModPath>$(BattleTechGameDir)\Mods\DynamicShops</DynamicShopsModPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(DynamicShopsModPath)' == ''">
+    <!-- sources dir -->
+    <DynamicShopsModPath>$(MSBuildProjectDirectory)\..</DynamicShopsModPath>
+  </PropertyGroup>
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7E755F55-106A-4F0D-A970-0BA7FC6C5662}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DynamicShops</RootNamespace>
-    <AssemblyName>DynamicShops</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>11</LangVersion>
+    <AssemblySearchPaths>
+      $(ReferencePath);
+      {HintPathFromItem};
+      $(BattleTechGameDir)\BattleTech_Data\Managed\
+    </AssemblySearchPaths>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CCDEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
-    <Prefer32Bit>false</Prefer32Bit>
+  <Target Name="CopyFilesToGame" AfterTargets="CopyFilesToOutputDirectory">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DynamicShopsModPath)" />
+  </Target>
+  <PropertyGroup>
+    <!-- avoids IgnoresAccessChecksToAttribute warnings -->
+    <PublicizerRuntimeStrategies>Unsafe</PublicizerRuntimeStrategies>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\..\Mods\ModTek\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\BattleTech_Data\Managed\Assembly-CSharp.dll</HintPath>
+    <PackageReference Include="Krafs.Publicizer" Version="2.2.1" />
+    <Publicize Include="Assembly-CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HarmonyX" Version="2.10.1">
+      <PrivateAssets>all</PrivateAssets>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+        <Reference Include="CustomShops">
+      <HintPath>$(DynamicShopsModPath)\..\CustomShops\CustomShops.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="CustomShops">
-      <HintPath>..\..\CustomShops\CustomShops.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="Assembly-CSharp">
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\BattleTech_Data\Managed\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Core">
-      <HintPath>..\..\..\BattleTech_Data\Managed\System.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Runtime.Serialization">
-      <HintPath>..\..\..\BattleTech_Data\Managed\System.Runtime.Serialization.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq">
-      <HintPath>..\..\..\BattleTech_Data\Managed\System.Xml.Linq.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\BattleTech_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\BattleTech_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>..\..\..\BattleTech_Data\Managed\UnityEngine.Networking.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\BattleTech_Data\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Conditions\ConditionBuilder.cs" />
-    <Compile Include="Conditions\DFactionRep.cs" />
-    <Compile Include="Conditions\DMRBCondition.cs" />
-    <Compile Include="Conditions\DOwnerCondition.cs" />
-    <Compile Include="Conditions\DPirateReputattionCondition.cs" />
-    <Compile Include="Conditions\DReputattionCondition.cs" />
-    <Compile Include="Conditions\DTagCondition.cs" />
-    <Compile Include="Conditions\DBoolean.cs" />
-    <Compile Include="Control.cs" />
-    <Compile Include="Conditions\DCondition.cs" />
-    <Compile Include="DebugTools.cs" />
-    <Compile Include="DShopDef.cs" />
-    <Compile Include="DynamicShopSettings.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shops\DBlackMarket.cs" />
-    <Compile Include="Shops\DCustomShop.cs" />
-    <Compile Include="Shops\DCustomShopDescriptor.cs" />
-    <Compile Include="Shops\DFactionShop.cs" />
-    <Compile Include="Shops\DSystemShop.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\mod.json">
-      <Link>mod.json</Link>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Patches\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

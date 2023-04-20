@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using BattleTech;
-using BattleTech.UI;
 using HBS.Logging;
-using Newtonsoft.Json;
-using UnityEngine;
 
 namespace DynamicShops
 {
@@ -23,7 +17,8 @@ namespace DynamicShops
         Conditions = 1 << 2,
         FactionLoad = 1 << 3,
         RepLoad = 1 << 4,
-
+        DateLoad = 1 << 5,
+        CLengthLoad = 1 << 6,
         All = 0xffff,
     }
 

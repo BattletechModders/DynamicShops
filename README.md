@@ -1,5 +1,9 @@
 # DynamicShops
 
+**v1.1.0.0 and higher require modtek v3 or higher**
+
+**LogLevel in mod.json has been deprecated. Please set logging level using AdvancedJsonMerge, or by adding setting for `CustomShops` to your modpacks HBS debug settings.json.**
+
 Basic idea of DynamicShops is ability to fill shop based on given conditions, that can be changed.
 
 ## How game shop work
@@ -126,6 +130,12 @@ each condition consist of pair "type" : "value"
 in prebuild conditions value - simple string with coma separated values. DynamicShops check each value and return true if all of them true
 
 Current implemented conditions:
+
+"ctag" : "ctag1,!ctag2" - true if each of ctag1 present and each of ctag2 not present in companytags
+
+"careerLengthCondition": "30, !200" - true if career length is longer than 30 days, and less than 200 days 
+
+"dateCondition": "3062-03-28T00:00:00Z, !3062-05-28T00:00:00Z" - true if current simgame date is *after* 3062-03-28 and *before* 3062-05-28
 
 "tag" : "tag1,!tag2" - true if each of tag1 present and each of tag2 not present in system
 

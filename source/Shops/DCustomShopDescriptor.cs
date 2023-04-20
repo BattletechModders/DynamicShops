@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using fastJSON;
-using HBS.Scripting.SimpleSh;
 
 namespace DynamicShops.Shops
 {
