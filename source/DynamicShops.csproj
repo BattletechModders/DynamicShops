@@ -2,9 +2,6 @@
   <Target Name="ValidateBattleTechGameDir" Condition="'$(BattleTechGameDir)' == '' Or !Exists('$(BattleTechGameDir)')">
     <Error Text="BattleTechGameDir variable not set properly" />
   </Target>
-<PropertyGroup>
-<Configurations>Debug;Release;ExpandedInit;SkillBasedInit</Configurations>
-</PropertyGroup>
   <PropertyGroup Condition="'$(DynamicShopsModPath)' == '' And Exists('$(BattleTechGameDir)\Mods\Core\DynamicShops')">
     <!-- RogueTech -->
     <DynamicShopsModPath>$(BattleTechGameDir)\Mods\Core\DynamicShops</DynamicShopsModPath>
@@ -17,53 +14,6 @@
     <!-- sources dir -->
     <DynamicShopsModPath>$(MSBuildProjectDirectory)\..</DynamicShopsModPath>
   </PropertyGroup>
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9499D31A-A6CB-43DB-A43A-65F7EAF74DDE}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DynamicShops</RootNamespace>
-    <AssemblyName>DynamicShops</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ExpandedInit|AnyCPU'">
-    <OutputPath>bin\ExpandedInit\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ExpandedInit</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'SkillBasedInit|AnyCPU'">
-    <OutputPath>bin\SkillBasedInit\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SkillBasedInit</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'ExpandedInit|AnyCPU' ">
-    <Reference Include="ExpandedInitiative">
-      <HintPath>$(BattleTechGameDir)\Mods\ExpandedInitiative\ExpandedInitiative.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'SkillBasedInit|AnyCPU' ">
-    <Reference Include="\SkillBasedInit">
-      <HintPath>$(RT_Repo)\Core\\SkillBasedInit\\SkillBasedInit.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net472</TargetFramework>
@@ -90,7 +40,6 @@
   <ItemGroup>
     <PackageReference Include="Krafs.Publicizer" Version="2.2.1" />
     <Publicize Include="Assembly-CSharp" />
-    <Publicize Include="Assembly-CSharp-firstpass" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HarmonyX" Version="2.10.1">
@@ -104,9 +53,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">

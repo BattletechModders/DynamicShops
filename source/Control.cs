@@ -48,8 +48,8 @@ namespace DynamicShops
                 Logger.LogDebug(str);
 
 #endif  
-                var HarmonyPackage = "io.github.denadan.DynamicShops";
-                Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), HarmonyPackage);
+                var harmonyPackage = "io.github.denadan.DynamicShops";
+                Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyPackage);
                 RegisterConditions(Assembly.GetExecutingAssembly());
 
                 if (Settings.ReplaceSystemShop)
