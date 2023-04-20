@@ -10,6 +10,8 @@ log.txt
 *.user
 *.userosscache
 *.sln.docstates
+# Ignore the VS Directory.build.props file
+Directory.Build.props 
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -266,6 +268,3 @@ __pycache__/
 /readme_images
 /111.txt
 /modstate.json
-
-# Ignore the VS Directory.build.props file
-Directory.Build.props 

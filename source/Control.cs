@@ -1,11 +1,9 @@
 ﻿//#undef CCDEBUG
 
-using Harmony;
 using System;
 using System.Reflection;
 using System.Collections.Generic;
 using System.IO;
-using BattleTech.UI;
 using HBS.Logging;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -43,17 +41,13 @@ namespace DynamicShops
                     Settings = new DynamicShopSettings();
                 }
 
-
-
-                SetupLogging(directory);
 #if CCDEBUG
                 var str = JsonConvert.SerializeObject(Settings, Formatting.Indented);
                 Logger.LogDebug(str);
 
 #endif  
-                var harmony = HarmonyInstance.Create("io.github.denadan.DynamicShops");
-                harmony.PatchAll(Assembly.GetExecutingAssembly());
-
+                var harmonyPackage = "io.github.denadan.DynamicShops";
+                Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), harmonyPackage);
                 RegisterConditions(Assembly.GetExecutingAssembly());
 
                 if (Settings.ReplaceSystemShop)
@@ -67,7 +61,7 @@ namespace DynamicShops
                 FactionShopDefs = new List<DFactionShopDef>();
                 BlackMarketShopDefs = new List<DShopDef>();
 
-                Logger.Log("Loaded DynamicShops v0.6 for bt 1.9.1");
+                Logger.Log($"Loaded DynamicShops {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location)} for bt 1.9.1");
 #if CCDEBUG
                 Logger.LogDebug("done");
 #endif

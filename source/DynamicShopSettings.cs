@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using BattleTech;
-using BattleTech.UI;
 using HBS.Logging;
-using Newtonsoft.Json;
-using UnityEngine;
 
 namespace DynamicShops
 {
