@@ -9,10 +9,10 @@ public class DMRBCondition : DCondition
     private List<int> less;
     private List<int> equal;
     private List<int> more;
-    private List<int> emore;
-    private List<int> eless;
+    private List<int> equalMore;
+    private List<int> equalLess;
 
-    private bool allways_true = false;
+    private bool alwaysTrue = false;
 
     public override bool Init(object json)
     {
@@ -22,44 +22,44 @@ public class DMRBCondition : DCondition
                 list.Add(res);
         }
 
-        if (json == null && !(json is string))
+        if (json == null && json is not string)
             return false;
 
         var str = json.ToString();
 
         if (string.IsNullOrEmpty(str))
         {
-            allways_true = true;
+            alwaysTrue = true;
             return false;
         }
-        allways_true = false;
+        alwaysTrue = false;
         var strs = str.Split(',');
 
         less = new List<int>();
         equal = new List<int>();
         more = new List<int>();
-        emore = new List<int>();
-        eless = new List<int>();
+        equalMore = new List<int>();
+        equalLess = new List<int>();
 
         foreach (var item in strs)
         {
-            var ttag = item.Trim();
-            if (ttag.StartsWith("<"))
-                add_to_list(less, ttag.Substring(1));
-            else if (ttag.StartsWith(">"))
-                add_to_list(more, ttag.Substring(1));
-            else if (ttag.StartsWith("+"))
-                add_to_list(emore, ttag.Substring(1));
-            else if (ttag.StartsWith("-"))
-                add_to_list(eless, ttag.Substring(1));
+            var tag = item.Trim();
+            if (tag.StartsWith("<"))
+                add_to_list(less, tag.Substring(1));
+            else if (tag.StartsWith(">"))
+                add_to_list(more, tag.Substring(1));
+            else if (tag.StartsWith("+"))
+                add_to_list(equalMore, tag.Substring(1));
+            else if (tag.StartsWith("-"))
+                add_to_list(equalLess, tag.Substring(1));
             else
-                add_to_list(equal, ttag);
+                add_to_list(equal, tag);
         }
         return true;
     }
     public override bool IfApply(SimGameState sim, StarSystem curSystem)
     {
-        if (allways_true)
+        if (alwaysTrue)
             return true;
 
         var reputation = sim.GetCurrentMRBLevel();
@@ -68,11 +68,11 @@ public class DMRBCondition : DCondition
             if (reputation != item)
                 return false;
 
-        foreach (var item in eless)
+        foreach (var item in equalLess)
             if (reputation > item)
                 return false;
 
-        foreach (var item in emore)
+        foreach (var item in equalMore)
             if (reputation < item)
                 return false;
 

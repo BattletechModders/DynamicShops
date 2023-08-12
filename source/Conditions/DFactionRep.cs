@@ -15,21 +15,21 @@ public class DFactionRep : DCondition
     private List<SimGameReputation> less;
     private List<SimGameReputation> equal;
     private List<SimGameReputation> more;
-    private List<SimGameReputation> emore;
-    private List<SimGameReputation> eless;
+    private List<SimGameReputation> equalMore;
+    private List<SimGameReputation> equalLess;
 
 
-    private bool allways_true = false;
+    private bool alwaysTrue = false;
 
     public override bool Init(object json)
     {
-        void add_to_list(List<SimGameReputation> list, string value)
+        static void addToList(List<SimGameReputation> list, string value)
         {
             if (Enum.TryParse<SimGameReputation>(value, out var res))
                 list.Add(res);
         }
 
-        if (json == null || !(json is IDictionary<string, object> dictionary))
+        if (json == null || json is not IDictionary<string, object> dictionary)
             return false;
 
         if (!dictionary.ContainsKey("faction") || !dictionary.ContainsKey("rep"))
@@ -40,39 +40,39 @@ public class DFactionRep : DCondition
 
         if (string.IsNullOrEmpty(str))
         {
-            allways_true = true;
+            alwaysTrue = true;
             return false;
         }
-        allways_true = false;
+        alwaysTrue = false;
         var strs = str.ToUpper().Split(',');
 
 
         less = new List<SimGameReputation>();
         equal = new List<SimGameReputation>();
         more = new List<SimGameReputation>();
-        emore = new List<SimGameReputation>();
-        eless = new List<SimGameReputation>();
+        equalMore = new List<SimGameReputation>();
+        equalLess = new List<SimGameReputation>();
 
         foreach (var item in strs)
         {
-            var ttag = item.Trim();
-            if (ttag.StartsWith("<"))
-                add_to_list(less, ttag.Substring(1));
-            else if (ttag.StartsWith(">"))
-                add_to_list(more, ttag.Substring(1));
-            else if (ttag.StartsWith("+"))
-                add_to_list(emore, ttag.Substring(1));
-            else if (ttag.StartsWith("-"))
-                add_to_list(eless, ttag.Substring(1));
+            var tag = item.Trim();
+            if (tag.StartsWith("<"))
+                addToList(less, tag.Substring(1));
+            else if (tag.StartsWith(">"))
+                addToList(more, tag.Substring(1));
+            else if (tag.StartsWith("+"))
+                addToList(equalMore, tag.Substring(1));
+            else if (tag.StartsWith("-"))
+                addToList(equalLess, tag.Substring(1));
             else
-                add_to_list(equal, ttag);
+                addToList(equal, tag);
         }
 
         Control.LogDebug(DInfo.RepLoad, $"Reputation to owner loaded:");
         if (less.Count > 0) Control.LogDebug(DInfo.RepLoad, "- <:" + less.Aggregate("", (total, next) => total += next.ToString() + ";"));
         if (more.Count > 0) Control.LogDebug(DInfo.RepLoad, "- >:" + more.Aggregate("", (total, next) => total += next.ToString() + ";"));
-        if (emore.Count > 0) Control.LogDebug(DInfo.RepLoad, "- +:" + emore.Aggregate("", (total, next) => total += next.ToString() + ";"));
-        if (eless.Count > 0) Control.LogDebug(DInfo.RepLoad, "- -:" + eless.Aggregate("", (total, next) => total += next.ToString() + ";"));
+        if (equalMore.Count > 0) Control.LogDebug(DInfo.RepLoad, "- +:" + equalMore.Aggregate("", (total, next) => total += next.ToString() + ";"));
+        if (equalLess.Count > 0) Control.LogDebug(DInfo.RepLoad, "- -:" + equalLess.Aggregate("", (total, next) => total += next.ToString() + ";"));
         if (equal.Count > 0) Control.LogDebug(DInfo.RepLoad, "- =:" + equal.Aggregate("", (total, next) => total += next.ToString() + ";"));
 
 
@@ -81,10 +81,7 @@ public class DFactionRep : DCondition
     public override bool IfApply(SimGameState sim, StarSystem curSystem)
     {
 
-        if (faction == null)
-        {
-            faction = FactionEnumeration.GetFactionByName(Faction);
-        }
+        faction ??= FactionEnumeration.GetFactionByName(Faction);
 
         if (faction.IsInvalidUnset)
         {
@@ -95,7 +92,7 @@ public class DFactionRep : DCondition
         var reputation = sim.GetReputation(faction);
         Control.LogDebug(DInfo.Conditions, $"- Reputation check for {faction.FactionDef.ShortName.ToLower()}  rep:{reputation}");
 
-        if (allways_true)
+        if (alwaysTrue)
         {
             Control.LogDebug(DInfo.Conditions, $"-- empty rep lists, passed");
             return true;
@@ -107,14 +104,14 @@ public class DFactionRep : DCondition
                 Control.LogDebug(DInfo.Conditions, $"-- failed {reputation} != {item}");
                 return false;
             }
-        foreach (var item in eless)
+        foreach (var item in equalLess)
             if (reputation > item)
             {
                 Control.LogDebug(DInfo.Conditions, $"-- failed {reputation} > {item}");
                 return false;
             }
 
-        foreach (var item in emore)
+        foreach (var item in equalMore)
             if (reputation < item)
             {
                 Control.LogDebug(DInfo.Conditions, $"-- failed {reputation} < {item}");

@@ -9,7 +9,7 @@ using c = CustomShops.Control;
 
 namespace DynamicShops.Shops;
 
-public class DCustomShop : TaggedShop, ITextIcon, IDefaultPrice, IDiscountFromFaction
+public class DCustomShop : TaggedShop, ITextIcon, ICustomPrice, IDiscountFromFaction
 {
     public DCustomShopDescriptor Descriptor { get; private set; }
 
@@ -31,7 +31,7 @@ public class DCustomShop : TaggedShop, ITextIcon, IDefaultPrice, IDiscountFromFa
         if (!Control.CustomShopDefs.ContainsKey(Name))
             return;
 
-        // Get list of shopdefs with given custom name
+        // Get list of shop defs with given custom name
         List<DCustomShopDef> defs = Control.CustomShopDefs[Name];
 
         foreach (var shop_def in defs)
@@ -41,10 +41,10 @@ public class DCustomShop : TaggedShop, ITextIcon, IDefaultPrice, IDiscountFromFa
             var use = true;
             if (shop_def.Conditions != null)
             {
-                foreach (var cond in shop_def.Conditions)
+                foreach (var condition in shop_def.Conditions)
                 {
-                    Control.LogDebug(DInfo.Conditions, $"- {cond.GetType()}");
-                    if (!cond.IfApply(c.State.Sim, c.State.CurrentSystem))
+                    Control.LogDebug(DInfo.Conditions, $"- {condition.GetType()}");
+                    if (!condition.IfApply(c.State.Sim, c.State.CurrentSystem))
                     {
                         use = false;
                         break;
@@ -63,6 +63,8 @@ public class DCustomShop : TaggedShop, ITextIcon, IDefaultPrice, IDiscountFromFa
         }           
         Tags = tags;
     }
+
+    public int GetPrice(TypedShopDefItem item) => PriceHelpers.GetPrice(item);
 
     public override string Name => Descriptor.Name;
     public override string TabText => Descriptor.TabText;

@@ -5,28 +5,28 @@ namespace DynamicShops;
 [DCondition("careerLengthCondition")]
 public class CareerLengthCondition : DCondition
 {
-    public bool Autopass = false;
+    public bool AutoPass = false;
     public int MinLength = int.MinValue;
     public int MaxLength = int.MaxValue;
     public override bool Init(object json)
     {
         if (json == null)
         {
-            Autopass = true;
+            AutoPass = true;
             return false;
         }
 
         var jsonString = json.ToString();
         if (string.IsNullOrEmpty(jsonString))
         {
-            Autopass = true;
+            AutoPass = true;
             return false;
         }
-        Autopass = false;
+        AutoPass = false;
         var splitConditions = jsonString.Split(',');
-        foreach (var cond in splitConditions)
+        foreach (var condition in splitConditions)
         {
-            var trTime = cond.Trim();
+            var trTime = condition.Trim();
             if (trTime.StartsWith("!"))
             {
                 MaxLength = int.Parse(trTime.Substring(1));
@@ -46,7 +46,7 @@ public class CareerLengthCondition : DCondition
     {
         Control.LogDebug(DInfo.Conditions, $"- careerLengthCondition check for {sim.CurrentDate}");
 
-        if (Autopass)
+        if (AutoPass)
         {
             Control.LogDebug(DInfo.Conditions, $"-- empty condition, passed");
             return true;

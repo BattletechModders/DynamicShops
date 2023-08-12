@@ -8,7 +8,7 @@ public class DSystemShop : CustomShops.Shops.SystemShop
 
     protected override void UpdateTags()
     {
-        List<string> tags = new List<string>();
+        List<string> tags = new();
         if (!string.IsNullOrWhiteSpace(Control.Settings.EmptyPlanetTag))
             if (CustomShops.Control.State.CurrentSystem.Def.Tags.Contains(Control.Settings.EmptyPlanetTag))
             {
@@ -26,7 +26,7 @@ public class DSystemShop : CustomShops.Shops.SystemShop
                 foreach (var c in shop_def.Conditions)
                 {
 
-                    Control.LogDebug(DInfo.Conditions, $"- {c.GetType().ToString()}");
+                    Control.LogDebug(DInfo.Conditions, $"- {c.GetType()}");
                     if (!c.IfApply(CustomShops.Control.State.Sim, CustomShops.Control.State.CurrentSystem))
                     {
                         use = false;

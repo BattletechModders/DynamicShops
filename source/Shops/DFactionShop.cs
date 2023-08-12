@@ -42,7 +42,7 @@ public class DFactionShop : CustomShops.Shops.FactionShop
         }
         var name = RelatedFaction.Name.ToLower();
 
-        List<string> tags = new List<string>();
+        List<string> tags = new();
         foreach (var shop_def in Control.FactionShopDefs)
         {
             Control.LogDebug(DInfo.Conditions, $"Start to check conditions:");

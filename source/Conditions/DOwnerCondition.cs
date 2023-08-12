@@ -7,38 +7,38 @@ namespace DynamicShops;
 public class DOwnerCondition : DCondition
 {
     private List<string> owners;
-    private List<string> nowners;
-    private bool allways_true = false;
+    private List<string> noOwners;
+    private bool alwaysTrue = false;
     public override bool Init(object json)
     {
-        if (json == null && !(json is string))
+        if (json == null && json is not string)
             return false;
 
         var str = json.ToString();
 
         if (string.IsNullOrEmpty(str))
         {
-            allways_true = true;
+            alwaysTrue = true;
             return false;
         }
-        allways_true = false;
+        alwaysTrue = false;
         var strs = str.Split(',');
         owners = new List<string>();
-        nowners = new List<string>();
+        noOwners = new List<string>();
 
         foreach (var tag in strs)
         {
-            var ttag = tag.Trim().ToLower();
-            if (ttag.StartsWith("!"))
-                nowners.AddRange(ConditionBuilder.ExpandGenericFaction(ttag.Substring(1)));
+            var trimmedTag = tag.Trim().ToLower();
+            if (trimmedTag.StartsWith("!"))
+                noOwners.AddRange(ConditionBuilder.ExpandGenericFaction(trimmedTag.Substring(1)));
             else
-                owners.AddRange(ConditionBuilder.ExpandGenericFaction(ttag));
+                owners.AddRange(ConditionBuilder.ExpandGenericFaction(trimmedTag));
         }
 
         Control.LogDebug(DInfo.FactionLoad, "Owner loaded:");
         Control.LogDebug(DInfo.FactionLoad, $"- base: {str}");
         Control.LogDebug(DInfo.FactionLoad, DebugTools.ShowList("- owners:", owners));
-        Control.LogDebug(DInfo.FactionLoad, DebugTools.ShowList("- nowners:", nowners));
+        Control.LogDebug(DInfo.FactionLoad, DebugTools.ShowList("- noOwners:", noOwners));
 
         return true;
     }
@@ -47,8 +47,7 @@ public class DOwnerCondition : DCondition
     {
         Control.LogDebug(DInfo.Conditions, $"- Owner check for {curSystem.OwnerValue.FactionDef.ShortName.ToLower()}");
 
-
-        if (allways_true)
+        if (alwaysTrue)
         {
             Control.LogDebug(DInfo.Conditions, $"-- empty condition, passed");
             return true;
@@ -63,9 +62,9 @@ public class DOwnerCondition : DCondition
             return false;
         }
 
-        if (nowners.Contains(curSystem.OwnerValue.Name.ToLower()))
+        if (noOwners.Contains(curSystem.OwnerValue.Name.ToLower()))
         {
-            Control.LogDebug(DInfo.Conditions, DebugTools.ShowList("-- nowner failed:", nowners));
+            Control.LogDebug(DInfo.Conditions, DebugTools.ShowList("-- noOwner failed:", noOwners));
 
             return false;
         }

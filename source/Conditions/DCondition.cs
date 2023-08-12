@@ -5,7 +5,7 @@ namespace DynamicShops;
 
 public class DConditionAttribute : Attribute
 {
-    public String Name { get; private set; }
+    public string Name { get; private set; }
 
     public DConditionAttribute(string name) { Name = name; }
 }

@@ -8,7 +8,7 @@ public class DBlackMarket : CustomShops.Shops.BlackMarketShop
 
     protected override void UpdateTags()
     {
-        List<string> tags = new List<string>();
+        List<string> tags = new();
         foreach (var shop_def in Control.BlackMarketShopDefs)
         {
             var use = true;

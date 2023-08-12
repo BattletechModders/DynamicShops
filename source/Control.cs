@@ -1,6 +1,5 @@
 ﻿//#undef CCDEBUG
 
-using System;
 using System.Reflection;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +14,7 @@ namespace DynamicShops;
 
 public static class Control
 {
-    public static DynamicShopSettings Settings = new DynamicShopSettings();
+    public static DynamicShopSettings Settings = new();
     private const string ModName = "DynamicShops";
     private const string LogPrefix = "[DShops]";
 
@@ -92,8 +91,7 @@ public static class Control
     public static void FinishedLoading(Dictionary<string, Dictionary<string, VersionManifestEntry>> customResources)
     {
         Log("Finish Loading");
-        Dictionary<string, VersionManifestEntry> manifest = null;
-        if (customResources.TryGetValue("DShopDef", out manifest))
+        if (customResources.TryGetValue("DShopDef", out Dictionary<string, VersionManifestEntry> manifest))
         {
             LogDebug(DInfo.Loading, "- Loading DShopDef");
             LoadShopDefs(manifest, ShopDefs);
@@ -178,21 +176,20 @@ public static class Control
     private static void LoadShopDefs<ShopType>(Dictionary<string, VersionManifestEntry> manifest, List<ShopType> shopDefs)
         where ShopType : DShopDef, new()
     {
-        void load_shop(Object obj)
+        void load_shop(object obj)
         {
-            var dict = obj as Dictionary<string, object>;
-            if (dict == null)
+            if (obj is not Dictionary<string, object> dict)
             {
                 LogDebug(DInfo.Loading, "---- cannot get dictionary - skipped");
                 return;
             }
-            ShopType shop = new ShopType();
+            ShopType shop = new();
             if (shop.FromJson(dict))
             {
                 shopDefs.Add(shop);
             }
             else
-                LogDebug(DInfo.Loading, "---- bad shopdef - skipped");
+                LogDebug(DInfo.Loading, "---- bad shop def - skipped");
 
         }
 
@@ -221,7 +218,7 @@ public static class Control
                 }
                 else
                 {
-                    LogError($"Missformed json {item.FilePath}");
+                    LogError($"Malformed json {item.FilePath}");
                 }
             }
             catch (Exception e)

@@ -7,32 +7,32 @@ namespace DynamicShops;
 public class DTagCondition : DCondition
 {
     private List<string> tags;
-    private List<string> ntags;
-    private bool allways_true = false;
+    private List<string> negativeTags;
+    private bool alwaysTrue = false;
 
     public override bool Init(object json)
     {
-        if (json == null && !(json is string))
+        if (json == null && json is not string)
             return false;
 
         var str = json.ToString();
 
         if (string.IsNullOrEmpty(str))
         {
-            allways_true = true;
+            alwaysTrue = true;
             return false;
         }
-        allways_true = false;
+        alwaysTrue = false;
         var strs = str.Split(',');
         tags = new List<string>();
-        ntags = new List<string>();
+        negativeTags = new List<string>();
         foreach (var tag in strs)
         {
-            var ttag = tag.Trim();
-            if (ttag.StartsWith("!"))
-                ntags.Add(ttag.Substring(1));
+            var trimmedTag = tag.Trim();
+            if (trimmedTag.StartsWith("!"))
+                negativeTags.Add(trimmedTag.Substring(1));
             else
-                tags.Add(ttag);
+                tags.Add(trimmedTag);
         }
         return true;
     }
@@ -40,14 +40,14 @@ public class DTagCondition : DCondition
     public override bool IfApply(SimGameState sim, StarSystem CurSystem)
     {
 
-        if (allways_true)
+        if (alwaysTrue)
             return true;
 
         foreach (var item in tags)
             if (!CurSystem.Def.Tags.Contains(item))
                 return false;
 
-        foreach (var item in ntags)
+        foreach (var item in negativeTags)
             if (CurSystem.Def.Tags.Contains(item))
                 return false;
         return true;

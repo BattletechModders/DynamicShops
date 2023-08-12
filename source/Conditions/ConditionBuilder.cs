@@ -12,7 +12,7 @@ public static class ConditionBuilder
 
     internal static void Register(Type type, DConditionAttribute attr)
     {
-        Control.Log($"Condition {type} registred as {attr.Name}");
+        Control.Log($"Condition {type} registered as {attr.Name}");
         types[attr.Name] = type;
     }
 
@@ -43,8 +43,7 @@ public static class ConditionBuilder
     {
         if (con == null)
             return null;
-        var dict = con as Dictionary<string, object>;
-        if (dict == null)
+        if (con is not Dictionary<string, object> dict)
             return null;
 
         var result = new List<DCondition>();
@@ -62,7 +61,7 @@ public static class ConditionBuilder
 
     internal static List<string> StringsFromJson(object json)
     {
-        List<string> values = new List<string>();
+        List<string> values = new();
         if (json is string str)
         {
             values.Add(str);

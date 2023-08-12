@@ -6,28 +6,28 @@ namespace DynamicShops;
 [DCondition("dateCondition")]
 public class DateCondition : DCondition
 {
-    public bool Autopass = false;
+    public bool AutoPass = false;
     public DateTime NotBefore = DateTime.MinValue;
     public DateTime NotAfter = DateTime.MaxValue;
     public override bool Init(object json)
     {
         if (json == null)
         {
-            Autopass = true;
+            AutoPass = true;
             return false;
         }
 
         var jsonString = json.ToString();
         if (string.IsNullOrEmpty(jsonString))
         {
-            Autopass = true;
+            AutoPass = true;
             return false;
         }
-        Autopass = false;
+        AutoPass = false;
         var splitConditions = jsonString.Split(',');
-        foreach (var cond in splitConditions)
+        foreach (var condition in splitConditions)
         {
-            var trTime = cond.Trim();
+            var trTime = condition.Trim();
             if (trTime.StartsWith("!"))
             {
                 NotAfter = DateTime.Parse(trTime.Substring(1));
@@ -48,7 +48,7 @@ public class DateCondition : DCondition
         Control.LogDebug(DInfo.Conditions, $"- dateCondition check for {sim.CurrentDate}");
 
 
-        if (Autopass)
+        if (AutoPass)
         {
             Control.LogDebug(DInfo.Conditions, $"-- empty condition, passed");
             return true;
