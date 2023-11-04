@@ -6,6 +6,8 @@ public class DBlackMarket : CustomShops.Shops.BlackMarketShop
 {
     public override string Name => "DBlackMarket";
 
+    public override bool Exists => CustomShops.Control.State.CurrentSystem != null &&
+        CustomShops.Control.State.CurrentSystem.Def.Tags.Contains("planet_other_blackmarket");
     protected override void UpdateTags()
     {
         List<string> tags = new();
