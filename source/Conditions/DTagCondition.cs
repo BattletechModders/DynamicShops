@@ -1,56 +1,55 @@
 ﻿using BattleTech;
 using System.Collections.Generic;
 
-namespace DynamicShops
+namespace DynamicShops;
+
+[DCondition("tag")]
+public class DTagCondition : DCondition
 {
-    [DCondition("tag")]
-    public class DTagCondition : DCondition
+    private List<string> tags;
+    private List<string> negativeTags;
+    private bool alwaysTrue = false;
+
+    public override bool Init(object json)
     {
-        private List<string> tags;
-        private List<string> ntags;
-        private bool allways_true = false;
+        if (json == null && json is not string)
+            return false;
 
-        public override bool Init(object json)
+        var str = json.ToString();
+
+        if (string.IsNullOrEmpty(str))
         {
-            if (json == null && !(json is string))
+            alwaysTrue = true;
+            return false;
+        }
+        alwaysTrue = false;
+        var strs = str.Split(',');
+        tags = new List<string>();
+        negativeTags = new List<string>();
+        foreach (var tag in strs)
+        {
+            var trimmedTag = tag.Trim();
+            if (trimmedTag.StartsWith("!"))
+                negativeTags.Add(trimmedTag.Substring(1));
+            else
+                tags.Add(trimmedTag);
+        }
+        return true;
+    }
+
+    public override bool IfApply(SimGameState sim, StarSystem CurSystem)
+    {
+
+        if (alwaysTrue)
+            return true;
+
+        foreach (var item in tags)
+            if (!CurSystem.Def.Tags.Contains(item))
                 return false;
 
-            var str = json.ToString();
-
-            if (string.IsNullOrEmpty(str))
-            {
-                allways_true = true;
+        foreach (var item in negativeTags)
+            if (CurSystem.Def.Tags.Contains(item))
                 return false;
-            }
-            allways_true = false;
-            var strs = str.Split(',');
-            tags = new List<string>();
-            ntags = new List<string>();
-            foreach (var tag in strs)
-            {
-                var ttag = tag.Trim();
-                if (ttag.StartsWith("!"))
-                    ntags.Add(ttag.Substring(1));
-                else
-                    tags.Add(ttag);
-            }
-            return true;
-        }
-
-        public override bool IfApply(SimGameState sim, StarSystem CurSystem)
-        {
-
-            if (allways_true)
-                return true;
-
-            foreach (var item in tags)
-                if (!CurSystem.Def.Tags.Contains(item))
-                    return false;
-
-            foreach (var item in ntags)
-                if (CurSystem.Def.Tags.Contains(item))
-                    return false;
-            return true;
-        }
+        return true;
     }
 }

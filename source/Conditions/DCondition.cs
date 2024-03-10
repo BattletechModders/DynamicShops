@@ -1,18 +1,17 @@
 ﻿using BattleTech;
 using System;
 
-namespace DynamicShops
+namespace DynamicShops;
+
+public class DConditionAttribute : Attribute
 {
-    public class DConditionAttribute : Attribute
-    {
-        public String Name { get; private set; }
+    public string Name { get; private set; }
 
-        public DConditionAttribute(string name) { Name = name; }
-    }
+    public DConditionAttribute(string name) { Name = name; }
+}
 
-    public abstract class DCondition
-    {
-        public abstract bool Init(object json);
-        public abstract bool IfApply(SimGameState sim, StarSystem CurSystem);
-    }
+public abstract class DCondition
+{
+    public abstract bool Init(object json);
+    public abstract bool IfApply(SimGameState sim, StarSystem CurSystem);
 }

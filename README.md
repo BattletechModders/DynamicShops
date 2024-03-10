@@ -44,12 +44,12 @@ DynamicShops replace this list based on System tag/owner/reputation/mrb rating
 ## Generic Faction lists
 
 Generic Factions can be used to group factions to simplify usage of faction conditions
-DynamicShops use FactionDef.ShortName to define factions
+DynamicShops use FactionDef.factionID to define factions
 
 For example:
 ```
-		"GenericFactions" : [
-			{
+  "GenericFactions" : [
+   {
 				"Name" : "GreatHouses",
 				"Members" : [
 					"Davion",
@@ -67,9 +67,9 @@ Will make new group GreatHouses, which can be used anywhere as faction replaceme
 ## ShopDefs
 
 To fill itemcollection lists DynamicShops use ShopDefs - conditional item lists
-there are 3 types of them for each type of shop
+there are 5 types of them for each type of shop
 
-`"CustomResourceTypes": ["DShopDef", "DFactionShopDef", "DBMShopDef"]`
+`"CustomResourceTypes": ["DShopDef", "DFactionShopDef", "DBMShopDef", "DCustomShopDef", "DCustomShopDescriptor"]`
 
 you can reference other mod to DynamicShops and use this types in manifest to load ShopDefs with your mod, for example:
 
@@ -86,7 +86,19 @@ you can reference other mod to DynamicShops and use this types in manifest to lo
 		{
 			"Type": "DBMShopDef",
 			"Path": "bmshops" 			
-		}
+		},
+        {
+            "Type": "DCustomShopDescriptor",
+            "Path": "customshops_descr"
+        },
+        {
+            "Type": "DCustomShopDef",
+            "Path": "spares"
+        },
+        {
+            "Type": "DCustomShopDef",
+            "Path": "manufacturers"
+        }
 	]
 ```
 Each file in this folder is simple json that can contain single or list of shopdefs
@@ -117,7 +129,6 @@ example of list from general.json
 Full syntax
 ```
 {
-	"shop" : "name" - name of custom dynamic shop, ignored in bm/system/faction shops
 	"factions" : [] - list or single faction, used for factions shop only, ignored in system and bm shops
 	"conditions " : { } list of condition to check, if empty or skipped - always true
 	"items" : list of single itemcollection to add when conditions met
@@ -271,3 +282,38 @@ IDictionary<string, object> - object json value `"mycondition" : { "a" : "test",
 ```
 4. Register your conditions to DynamicShops somewhere during mod initilization
 `DynamicShops.Control.RegisterConditions(Assembly.GetExecutingAssembly());`
+
+### Custom Shops
+
+If you want to implement completely custom shop definition (adds additional tab in Shops interface) you can use `DCustomShopDescriptor` to make a general definition of shop and `DCustomShopDef` to define what items to include to this shop
+
+1. Define `DCustomShopDescriptor`
+
+Syntax
+
+```
+{
+    "Name": "Ammunition_Shop",
+    "TabText": "Spares",
+    "Icon": "customshops_cbill",
+    "SortOrder": 800,
+    "ExistConditions":{
+        ...
+    }
+}
+
+```
+where `Name` is ID for this shop definition (it should be used in `DCustomShopDef` to link shop with it description), `TabText` is title for shop, `Icon` - icon that should be used for shop, `SortOrder` - number which shows place of this shop in tabs and
+`ExistConditions` contains conditions that controls will be this shop shown and when. Conditions has quite same format as given above. Custom conditions created by other mods applied too.
+
+2. Define particular instance of custom shop by defining `DCustomShopDef`
+
+Full syntax
+```
+{
+	"shop" : "name" - name of custom dynamic shop from DCustomShopDescriptor above
+	"factions" : [] - list or single faction, used for factions shop only, ignored in system and bm shops
+	"conditions " : { } list of condition to check, if empty or skipped - always true
+	"items" : list of single itemcollection to add when conditions met
+}
+```
