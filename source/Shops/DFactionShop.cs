@@ -11,7 +11,7 @@ public class DFactionShop : CustomShops.Shops.FactionShop
         get
         {
             if (Control.Settings.FactionShopOnEveryPlanet)
-                return RelatedFaction != null && RelatedFaction.Name != "Locals" && !RelatedFaction.IsInvalidUnset;
+                return RelatedFaction != null && RelatedFaction.FactionDef.factionID != "Locals" && !RelatedFaction.IsInvalidUnset;
             else
                 return base.Exists;
         }
@@ -40,7 +40,7 @@ public class DFactionShop : CustomShops.Shops.FactionShop
             Tags = new List<string>();
             return;
         }
-        var name = RelatedFaction.Name.ToLower();
+        var name = RelatedFaction.FactionDef.factionID;
 
         List<string> tags = new();
         foreach (var shop_def in Control.FactionShopDefs)

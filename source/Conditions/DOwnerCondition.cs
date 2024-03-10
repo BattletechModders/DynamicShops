@@ -28,7 +28,7 @@ public class DOwnerCondition : DCondition
 
         foreach (var tag in strs)
         {
-            var trimmedTag = tag.Trim().ToLower();
+            var trimmedTag = tag.Trim();
             if (trimmedTag.StartsWith("!"))
                 noOwners.AddRange(ConditionBuilder.ExpandGenericFaction(trimmedTag.Substring(1)));
             else
@@ -54,7 +54,7 @@ public class DOwnerCondition : DCondition
         }
 
 
-        if (!owners.Contains(curSystem.OwnerValue.FactionDefID))
+        if (!owners.Contains(curSystem.OwnerValue.FactionDef.factionID))
         {
 
             Control.LogDebug(DInfo.Conditions, DebugTools.ShowList("-- owner failed:", owners));
@@ -62,7 +62,7 @@ public class DOwnerCondition : DCondition
             return false;
         }
 
-        if (noOwners.Contains(curSystem.OwnerValue.FactionDefID))
+        if (noOwners.Contains(curSystem.OwnerValue.FactionDef.factionID))
         {
             Control.LogDebug(DInfo.Conditions, DebugTools.ShowList("-- noOwner failed:", noOwners));
 

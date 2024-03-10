@@ -78,9 +78,9 @@ public static class ConditionBuilder
 
     internal static IEnumerable<string> ExpandGenericFaction(string faction)
     {
-        var generic = Control.Settings.GenericFactions.FirstOrDefault(i => i.Name.ToLower() == faction);
+        var generic = Control.Settings.GenericFactions.FirstOrDefault(i => i.Name == faction);
         if (generic == null)
-            return Enumerable.Repeat(faction ,1);
-        return generic.Members.Select(i => i.ToLower());
+            return Enumerable.Repeat(faction, 1);
+        return generic.Members;
     }
 }

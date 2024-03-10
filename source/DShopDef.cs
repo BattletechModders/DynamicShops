@@ -41,7 +41,7 @@ public class DFactionShopDef : DShopDef
                     return false;
                 }
                 Factions = new List<string>();
-                foreach (var faction in factions.Select(i => i.ToLower()))
+                foreach (var faction in factions)
                     Factions.AddRange(ConditionBuilder.ExpandGenericFaction(faction));
 #if CCDEBUG
                 if (Control.Settings.DebugInfo.HasFlag(DInfo.Loading))
