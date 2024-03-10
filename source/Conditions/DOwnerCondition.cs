@@ -54,7 +54,7 @@ public class DOwnerCondition : DCondition
         }
 
 
-        if (!owners.Contains(curSystem.OwnerValue.Name.ToLower()))
+        if (!owners.Contains(curSystem.OwnerValue.FactionDefID))
         {
 
             Control.LogDebug(DInfo.Conditions, DebugTools.ShowList("-- owner failed:", owners));
@@ -62,7 +62,7 @@ public class DOwnerCondition : DCondition
             return false;
         }
 
-        if (noOwners.Contains(curSystem.OwnerValue.Name.ToLower()))
+        if (noOwners.Contains(curSystem.OwnerValue.FactionDefID))
         {
             Control.LogDebug(DInfo.Conditions, DebugTools.ShowList("-- noOwner failed:", noOwners));
 
